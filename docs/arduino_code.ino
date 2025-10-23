@@ -1,4 +1,4 @@
-int analogInputPort = A8; // Port that will be used to acquire data
+int analogInputPort = A0; // Port that will be used to acquire data
 int analogValue; // A variable to store data from analogInputPort
 
 void setup()

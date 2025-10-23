@@ -59,7 +59,7 @@
              <widget class="QListWidget" name="points_list"/>
             </item>
             <item row="1" column="0" alignment="Qt::AlignHCenter">
-             <widget class="QPushButton" name="remove_point">
+             <widget class="QPushButton" name="remove_point_b">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -140,7 +140,7 @@
        </widget>
       </item>
       <item row="3" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="finish_b">
         <property name="minimumSize">
          <size>
           <width>100</width>

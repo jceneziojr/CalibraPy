@@ -30,10 +30,10 @@ backward = {
     10: [20.881625104808343, 21.12235995287735, 21.158802278864535, 21.02211193466849, 21.18054723685151]
 }
 
-fwd_avg = []
-bwd_avg = []
+fwd_avg = []  # armazena o valor médio em cada ponto sentido fwd
+bwd_avg = []  # armazena o valor médio em cada ponto sentido bwd
 
-repetibilidade = {}
+repetibilidade = {}  # repetibilidade em cada ponto
 
 for p in points:
     fwd_avg.append(float(np.mean(forward[p])))
@@ -46,7 +46,7 @@ print(fwd_avg)
 print(bwd_avg)
 print(repetibilidade)
 
-ordem_ajuste = 1
+ordem_ajuste = 2
 curva_calib_estatica = np.polyfit(points, fwd_avg, ordem_ajuste)
 sensibilidade = np.polyder(curva_calib_estatica)
 
@@ -56,3 +56,21 @@ print(sensibilidade)
 valores_curva_sensibilidade = np.polyval(sensibilidade, points)
 
 print(valores_curva_sensibilidade)
+
+valores_curva_calib_estatica = np.polyval(curva_calib_estatica, points)
+diffs = np.abs(np.array(valores_curva_calib_estatica) - np.array(fwd_avg))
+
+Dfm = np.max(diffs)  # máxima diferença entre o ajuste feito e os dados reais
+
+erro_ajuste = (Dfm / points[-1]) * 100  # erro de linearidade ou conformidade
+
+if ordem_ajuste == 1:
+    print(f"Erro de linearidade L(%) = {erro_ajuste:.2f}%")
+else:
+    print(f"Erro de conformidade C(%) = {erro_ajuste:.2f}%")
+
+diferencas_histerese = np.abs(np.array(fwd_avg) - np.array(bwd_avg))  # diferenças ponto a ponto entre os dois sentidos
+Hmax = np.max(diferencas_histerese)
+erro_histerese = (Hmax / points[-1]) * 100
+
+print(f"Erro de histerese H(%) = {erro_histerese:.2f}%")
