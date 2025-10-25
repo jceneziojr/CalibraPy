@@ -1,159 +1,196 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import root_scalar
-import pynumdiff
 from scipy.signal import lti, step
+from sklearn.metrics import mean_squared_error
+import pynumdiff
 
 
-def eta_from_lambda(lmbd_target):
-    # encontrando o valor de eta, pelo lambda
-    def f(eta):
-        _x = np.log(eta) / (eta - 1)
-        return _x * np.exp(-_x) - lmbd_target
+class SundaresanSobreamortecido:
+    def __init__(self, t, y, amplitude_degrau=1.0, dt=None):
+        self.t = t
+        self.y = y
+        self.amplitude_degrau = amplitude_degrau
+        if not dt:
+            self.dt = dt
+        else:
+            self.dt = self.t[1] - self.t[0]
 
-    sol = root_scalar(f, bracket=(0.0001, 0.9999), method='brentq')
-    return sol.root
+        # Resultados finais
+        self.K = None
+        self.xi = None
+        self.wn = None
+        self.tau_d = None
+        self.modelo = None
+        self.indice_inflexao = None
+
+    # ----------------------------------------------------------------------------------------
+    # Função auxiliar: resolver eta a partir de lambda
+    @staticmethod
+    def eta_from_lambda(lmbd_target):
+        def f(eta):
+            _x = np.log(eta) / (eta - 1)
+            return _x * np.exp(-_x) - lmbd_target
+
+        eta_vals = np.linspace(0.0001, 0.9999, 1000)
+        f_vals = [f(e) for e in eta_vals]
+        sign_changes = np.where(np.sign(f_vals[:-1]) != np.sign(f_vals[1:]))[0]
+        if len(sign_changes) == 0:
+            raise ValueError("Nenhuma troca de sinal encontrada — λ fora do domínio possível.")
+
+        a, b = eta_vals[sign_changes[0]], eta_vals[sign_changes[0] + 1]
+        sol = root_scalar(f, bracket=(a, b), method='brentq')
+        return sol.root
+
+    # ----------------------------------------------------------------------------------------
+    def _calcular_ganho_normalizar(self):
+        tam_amostra = len(self.y)
+        y_inf = np.mean(self.y[-int(tam_amostra * 0.05):])
+        y_zerom = self.y[0]
+        self.K = (y_inf - y_zerom) / self.amplitude_degrau
+
+        y_adj = self.y - y_zerom
+        valor_y_ss = np.mean(self.y[int(tam_amostra * 0.9):])
+        y_normalizado = y_adj / valor_y_ss
+        return y_normalizado
+
+    # ----------------------------------------------------------------------------------------
+    def _calcular_area_m1(self, y_normalizado, dt):
+        dif_curva = 1 - y_normalizado
+        dif_curva[dif_curva < 0] = 0
+        m1 = np.sum(dif_curva) * dt
+        return m1
+
+    # ----------------------------------------------------------------------------------------
+    def _calcular_y_modelo(self, indice, t, x_hat, dxdt_hat, d2xdt_hat, m1, dt):
+        x0, y0 = t[indice], x_hat[indice]
+        Mi = dxdt_hat[indice]
+
+        tm = x0 + (1 - y0) / Mi
+        valor_lambda = (tm - m1) * Mi
+
+        try:
+            eta_valor = self.eta_from_lambda(valor_lambda)
+        except ValueError:
+            return np.inf, None, None, None, None
+
+        tau_1 = (eta_valor ** (eta_valor / (1 - eta_valor))) / Mi
+        tau_2 = (eta_valor ** (1 / (1 - eta_valor))) / Mi
+        tau_d = m1 - tau_1 - tau_2
+
+        wn_2 = 1 / (tau_1 * tau_2)
+        wn_n = wn_2 ** 0.5
+        constante = (tau_2 + tau_1) / (tau_1 * tau_2)
+        xi = constante / (2 * wn_n)
+
+        num = [wn_n ** 2]
+        den = [1, 2 * xi * wn_n, wn_n ** 2]
+        sistema = lti(num, den)
+        _, _y = step(sistema, T=t)
+
+        y_novo = np.zeros_like(_y)
+        mask = t >= tau_d
+        y_novo[mask] = np.interp(t[mask] - tau_d, t, _y)
+
+        mse = mean_squared_error(x_hat, y_novo)
+        return mse, y_novo, xi, wn_n, tau_d
+
+    # ----------------------------------------------------------------------------------------
+    def ajustar(self, window_size=10, num_iter=3, max_passos=30, delta_idx=5, tolerancia=1e-4):
+
+        y_normalizado = self._calcular_ganho_normalizar()  # normalizando o vetor
+        m1 = self._calcular_area_m1(y_normalizado, self.dt)  # calculo da area m1
+
+        # Derivadas (para encontrar ponto de inflexão)
+        x_hat, dxdt_hat = pynumdiff.smooth_finite_difference.kerneldiff(
+            y_normalizado, self.dt, kernel='mean', window_size=window_size, num_iterations=num_iter
+        )
+        x2_hat, d2xdt_hat = pynumdiff.smooth_finite_difference.kerneldiff(
+            dxdt_hat, self.dt, kernel='mean', window_size=window_size, num_iterations=num_iter
+        )
+
+        # ponto inicial de inflexão (usando iteração, pq as vezes o ajuste não fica bom ao final)
+        indice_inflexao = np.where(np.diff(np.sign(d2xdt_hat)))[0][0]
+
+        melhor_mse, melhor_y, melhor_xi, melhor_wn, melhor_tau_d = self._calcular_y_modelo(
+            indice_inflexao, self.t, x_hat, dxdt_hat, d2xdt_hat, m1, self.dt
+        )
+        melhor_indice = indice_inflexao
+
+        for offset in range(delta_idx, max_passos * delta_idx + 1, delta_idx):
+            # frente
+            idx_forward = indice_inflexao + offset
+            if idx_forward < len(self.t):
+                mse_fwd, y_fwd, xi_fwd, wn_fwd, tau_d_fwd = self._calcular_y_modelo(
+                    idx_forward, self.t, x_hat, dxdt_hat, d2xdt_hat, m1, self.dt
+                )
+                if mse_fwd < melhor_mse:
+                    melhor_mse, melhor_y, melhor_xi, melhor_wn, melhor_tau_d = mse_fwd, y_fwd, xi_fwd, wn_fwd, tau_d_fwd
+                    melhor_indice = idx_forward
+
+            # trás
+            idx_backward = indice_inflexao - offset
+            if idx_backward >= 0:
+                mse_bwd, y_bwd, xi_bwd, wn_bwd, tau_d_bwd = self._calcular_y_modelo(
+                    idx_backward, self.t, x_hat, dxdt_hat, d2xdt_hat, m1, self.dt
+                )
+                if mse_bwd < melhor_mse:
+                    melhor_mse, melhor_y, melhor_xi, melhor_wn, melhor_tau_d = mse_bwd, y_bwd, xi_bwd, wn_bwd, tau_d_bwd
+                    melhor_indice = idx_backward
+
+            if melhor_mse < tolerancia:
+                break
+
+        # guarda resultados
+        self.modelo = melhor_y * self.K  # aplica ganho calculado
+        self.xi = melhor_xi
+        self.wn = melhor_wn
+        self.tau_d = melhor_tau_d
+        self.indice_inflexao = melhor_indice
+
+        print("=== Resultados do Ajuste (Método de Sundaresan) ===")
+        print(f"Ganho (K): {self.K:.4f}")
+        print(f"Fator de amortecimento (ξ): {self.xi:.4f}")
+        print(f"Frequência natural (ωn): {self.wn:.4f} rad/s")
+        print(f"Atraso de tempo (τd): {self.tau_d:.4f} s")
+        print("Função de Transferência aproximada:")
+        print(
+            f"G(s) = {self.K:.3f} * exp(-{self.tau_d:.3f}s) / (s² + {2 * self.xi * self.wn:.3f}s + {self.wn ** 2:.3f})")
+        print("===============================================")
+
+    # ----------------------------------------------------------------------------------------
+    def plot_comparacao(self):
+        if self.modelo is None:
+            raise RuntimeError("Modelo ainda não ajustado. Execute ajustar() primeiro.")
+        plt.figure(figsize=(8, 4))
+        plt.plot(self.t, self.y, 'r', label='Dados medidos')
+        plt.plot(self.t, self.modelo, 'b', label='Modelo ajustado (x K)')
+        plt.xlabel("Tempo [s]")
+        plt.ylabel("Amplitude")
+        plt.title("Comparação entre dados e modelo (Método de Sundaresan)")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
 
 
-# Parâmetros do sistema de segunda ordem (sobreamortecido)
-K = 2.0  # ganho estático
-wn = 2.0  # frequência natural [rad/s]
-zeta = 1.5  # fator de amortecimento (>1 para sobreamortecido)
-
-t_final = 10  # duração da simulação [s]
-dt = 0.01  # passo de tempo [s]
-
-# Vetor de tempo
+# Gerando dados simulados
+K_real = 2.0
+wn_real = 2.0
+zeta_real = 1.5
+t_final = 10
+dt = 0.01
 t = np.arange(0, t_final, dt)
 
-# Entrada: degrau unitário
-u = np.ones_like(t)
+s1 = -wn_real * (zeta_real - np.sqrt(zeta_real ** 2 - 1))
+s2 = -wn_real * (zeta_real + np.sqrt(zeta_real ** 2 - 1))
+y_clean = K_real * (1 - (s2 * np.exp(s1 * t) - s1 * np.exp(s2 * t)) / (s2 - s1))
 
-# Cálculo dos polos reais (sobreamortecido)
-s1 = -wn * (zeta - np.sqrt(zeta ** 2 - 1))
-s2 = -wn * (zeta + np.sqrt(zeta ** 2 - 1))
-
-# Resposta exata ao degrau unitário
-# Fórmula da resposta ao degrau para sistema sobreamortecido
-y_clean = K * (1 - (s2 * np.exp(s1 * t) - s1 * np.exp(s2 * t)) / (s2 - s1))
-
-# Adição de ruído gaussiano (5% do ganho)
-noise_amplitude = 0.005 * K
-noise = np.random.normal(0, noise_amplitude, size=t.shape)
+np.random.seed(42)
+noise = np.random.normal(0, 0.005 * K_real, size=t.shape)
 y_noisy = y_clean + noise
 
-# Exibição dos resultados
-# plt.figure(figsize=(8, 4))
-# plt.plot(t, u, 'k--', label='Entrada (degrau unitário)')
-# plt.plot(t, y_clean, 'b', label='Saída sem ruído')
-# plt.plot(t, y_noisy, 'r', label='Saída com ruído')
-# plt.xlabel('Tempo [s]')
-# plt.ylabel('Amplitude')
-# plt.title('Resposta ao Degrau Unitário – Sistema de 2ª Ordem Sobreamortecido')
-# plt.legend()
-# plt.grid(True)
-# plt.tight_layout()
-# plt.show()
-
-# ========================================================================================================
-# CURVA ETA X LAMBDA
-eta = np.linspace(0.0001, 1, 10000)  # evita eta=1, pois causaria divisão por zero
-
-# Calcula chi e lambda
-chi = np.log(eta) / (eta - 1)
-
-lmbd = chi * np.exp(-chi)
-
-# Plota
-# plt.figure(figsize=(8, 5))
-# plt.plot(lmbd, eta, linewidth=2)
-# plt.ylabel(r'$\eta$', fontsize=14)
-# plt.xlabel(r'$\lambda$', fontsize=14)
-# plt.title(r'Curva $\lambda(\eta) = \frac{\ln(\eta)}{\eta - 1} e^{-\frac{\ln(\eta)}{\eta - 1}}$', fontsize=14)
-# plt.grid(True)
-# plt.show()
-
-# ========================================================================================================
-tam_amostra = y_noisy.shape[0]
-amplitude_degrau = 1  # amplitude degrau de entrada
-y_inf = np.mean(y_noisy[-int(tam_amostra * 0.05):])
-y_zerom = y_noisy[0]  # valor da saida no t-> 0-
-
-K = (y_inf - y_zerom) / amplitude_degrau  # ganho
-
-y_adj = y_noisy - y_noisy[0]  # tirando o valor da condição inicial
-
-valor_y_ss = np.mean(y_noisy[int(tam_amostra * 0.9):])  # valor em regime permanente, pegando os ultimos 10% dos dados
-
-y_normalizado = y_adj / valor_y_ss
-
-plt.figure(figsize=(8, 4))
-# plt.plot(t, u, 'k--', label='Entrada (degrau unitário)')
-# plt.plot(t, y_clean, 'b', label='Saída sem ruído')
-# plt.plot(t, y_noisy, 'r', label='Saída com ruído')
-# plt.plot(t, y_normalizado, 'g', label='Saída ajustada')
-plt.xlabel('Tempo [s]')
-plt.ylabel('Amplitude')
-plt.title('Resposta ao Degrau Unitário – Sistema de 2ª Ordem Sobreamortecido')
-plt.grid(True)
-plt.tight_layout()
-plt.ylim([0, 1])
-
-dif_curva = 1 - y_normalizado  # pra pegar a area mi
-dif_curva[dif_curva < 0] = 0  # zerando os valores que poderiam ficar acima de 1, pois deve estar tudo abaixo
-
-area = m1 = np.sum(dif_curva) * dt  # valor de m1
-print(f"m1 = {area}")
-
-# ==================================================
-# pegando derivada e segunda derivada, pra achar o ponto de inflexão
-x_hat, dxdt_hat = pynumdiff.smooth_finite_difference.kerneldiff(y_normalizado, dt, kernel='mean', window_size=10,
-                                                                num_iterations=3)
-x2_hat, d2xdt_hat = pynumdiff.smooth_finite_difference.kerneldiff(dxdt_hat, dt, kernel='mean', window_size=10,
-                                                                  num_iterations=3)
-
-plt.plot(t, x_hat, 'r', label='Saída filtrada')
-# plt.plot(t, dxdt_hat, 'b', label='Derivada saída')
-# plt.plot(t, d2xdt_hat, 'g', label='Derivada segunda saída')
-# print(np.where(d2xdt_hat == 0))
-
-indice_ponto_inflexao = np.where(np.diff(np.sign(d2xdt_hat)))[0][1]  # ponto de inflexão
-ponto_inflexao = (x0, y0) = (t[indice_ponto_inflexao], x_hat[indice_ponto_inflexao])
-Mi = dxdt_hat[indice_ponto_inflexao]
-
-x_reta = np.linspace(x0 - 2, x0 + 2, 100)
-y_reta = Mi * (x_reta - x0) + y0
-
-plt.plot(x_reta, y_reta, 'r--', label='Tangente')
-plt.plot(x0, y0, 'ko', label='Ponto')
-print(f"Mi = {Mi}")
-
-tm = x0 + (1 - y0) / Mi
-print(f"tm = {tm}")
-valor_lambda = (tm - m1) * Mi
-print(f"lambda = {valor_lambda}")
-
-eta_valor = eta_from_lambda(valor_lambda)
-print(f"eta = {eta_valor}")
-tau_1 = (eta_valor ** (eta_valor / (1 - eta_valor))) / Mi
-tau_2 = (eta_valor ** (1 / (1 - eta_valor))) / Mi
-tau_d = m1 - tau_1 - tau_2
-
-wn_2 = 1 / (tau_1 * tau_2)
-wn_n = wn_2 ** (1 / 2)
-
-print(f"{wn} -> {wn_n}")
-constante = (tau_2 + tau_1) / (tau_1 * tau_2)
-xi = constante / (2 * wn_n)
-print(f"{zeta} -> {xi}")
-
-num = [wn_n ** 2]
-den = [1, 2 * xi * wn_n, wn_n ** 2]
-sistema = lti(num, den)
-
-_, y_novo = step(sistema, T=t - tau_d)  # desloca o tempo
-y_novo[t < tau_d] = 0  # mantém zero antes do atraso
-
-plt.plot(t, y_novo, label=f'Resposta ao degrau')
-plt.legend()
-plt.show()
+# Aplicando a classe
+analisador = SundaresanSobreamortecido(t, y_noisy, amplitude_degrau=1, dt=dt)
+analisador.ajustar()
+analisador.plot_comparacao()
