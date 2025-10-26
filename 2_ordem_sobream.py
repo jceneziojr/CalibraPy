@@ -50,7 +50,7 @@ class SundaresanSobreamortecido:
         self.K = (y_inf - y_zerom) / self.amplitude_degrau
 
         y_adj = self.y - y_zerom
-        valor_y_ss = np.mean(self.y[int(tam_amostra * 0.9):])
+        valor_y_ss = np.mean(y_adj[int(tam_amostra * 0.9):])
         y_normalizado = y_adj / valor_y_ss
         return y_normalizado
 

@@ -56,7 +56,7 @@ y_noisy = y_clean + noise
 
 # Exibição dos resultados
 # plt.figure(figsize=(8, 4))
-# plt.plot(t, u, 'k--', label='Entrada (degrau unitário)')
+plt.plot(t, u, 'k--', label='Entrada (degrau unitário)')
 # plt.plot(t, y_clean, 'b', label='Saída sem ruído')
 # plt.plot(t, y_noisy, 'r', label='Saída com ruído')
 # plt.xlabel('Tempo [s]')
