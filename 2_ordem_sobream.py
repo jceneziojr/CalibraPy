@@ -11,10 +11,7 @@ class SundaresanSobreamortecido:
         self.t = t
         self.y = y
         self.amplitude_degrau = amplitude_degrau
-        if not dt:
-            self.dt = dt
-        else:
-            self.dt = self.t[1] - self.t[0]
+        self.dt = dt if dt is not None else t[1] - t[0]
 
         # Resultados finais
         self.K = None
@@ -52,7 +49,7 @@ class SundaresanSobreamortecido:
         y_adj = self.y - y_zerom
         valor_y_ss = np.mean(y_adj[int(tam_amostra * 0.9):])
         y_normalizado = y_adj / valor_y_ss
-        return y_normalizado
+        return y_normalizado, y_zerom
 
     # ----------------------------------------------------------------------------------------
     def _calcular_area_m1(self, y_normalizado, dt):
@@ -98,7 +95,7 @@ class SundaresanSobreamortecido:
     # ----------------------------------------------------------------------------------------
     def ajustar(self, window_size=10, num_iter=3, max_passos=30, delta_idx=5, tolerancia=1e-4):
 
-        y_normalizado = self._calcular_ganho_normalizar()  # normalizando o vetor
+        y_normalizado, y_zerom = self._calcular_ganho_normalizar()  # normalizando o vetor e pegando o nivel DC
         m1 = self._calcular_area_m1(y_normalizado, self.dt)  # calculo da area m1
 
         # Derivadas (para encontrar ponto de inflexão)
@@ -142,7 +139,7 @@ class SundaresanSobreamortecido:
                 break
 
         # guarda resultados
-        self.modelo = melhor_y * self.K  # aplica ganho calculado
+        self.modelo = melhor_y * self.K + y_zerom  # aplica ganho calculado e soma o patamar
         self.xi = melhor_xi
         self.wn = melhor_wn
         self.tau_d = melhor_tau_d
