@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="imgs">
+    <file>imgs/help.png</file>
     <file>imgs/reload.png</file>
   </qresource>
 </RCC>
