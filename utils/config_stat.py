@@ -15,7 +15,17 @@ class StatConfigDialog(QtWidgets.QDialog, Ui_Configs):
         self.remove_point_b.released.connect(self.remove_ponto)
 
     def get_ponto(self):
-        self.points_list.addItem(self.point_input.text())
+        texto = self.point_input.text().strip().replace(',', '.')
+
+        if not texto:
+            return  # sai se estiver vazio
+
+        try:
+            valor = float(texto)  # só procede se for numero
+        except ValueError:
+            return
+
+        self.points_list.addItem(str(valor))  # QListWidget só aceita texto
         self.point_input.clear()
 
     def remove_ponto(self):
@@ -27,9 +37,25 @@ class StatConfigDialog(QtWidgets.QDialog, Ui_Configs):
 
     def finalizar(self):
         texto = self.acq_points.text().strip()
+
+        if not texto:  # checa se o número de aquisição por pts está
+            return
+
+        try:
+            valor = int(texto)  # checando se é um int
+        except ValueError:
+            return
+
+        # verifica se está entre 1 e 10
+        if valor < 1 or valor > 10:
+            return
+
+        # lista de pontos
         self.pontos = [float(self.points_list.item(x).text()) for x in range(self.points_list.count())]
-        if not texto or not self.pontos or len(self.pontos) < 2:
-            pass
-        else:
-            self.pontos_acq = int(texto)
-            self.close()
+
+        # checa se há pelo menos dois pontos válidos
+        if not self.pontos or len(self.pontos) < 2:
+            return
+
+        self.pontos_acq = valor
+        self.close()

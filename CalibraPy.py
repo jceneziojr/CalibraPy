@@ -29,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.config_acq_b.released.connect(self.open_config_dialog)
         self.next_point_b.released.connect(self.next_point_handle)
         self.redo_point_b.released.connect(self.redo_point_handle)
+        self.finish_stat_b.released.connect(self.finish_stat_handle)
 
         # configurações iniciais
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -70,6 +71,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def open_config_dialog(self):
         config_dialog = StatConfigDialog()
+        if self.pontos and self.acquisition_points:
+            for p in self.pontos:
+                config_dialog.points_list.addItem(str(p))
+            config_dialog.acq_points.setText(str(self.acquisition_points))
         config_dialog.exec()
 
         self.acquisition_points = config_dialog.pontos_acq
@@ -139,7 +144,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.acq_b.released.connect(self.on_acq_button_pressed)
 
         self.acq_b.setEnabled(True)
+        self.config_acq_b.setEnabled(False)
         self.startup_acquisition_process()
+
 
     def on_acq_button_pressed(self):
         # desabilita o botão enquanto a aquisição pontual está em curso (opcional)
@@ -174,26 +181,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.plot_static_points()
 
     def plot_static_points(self):
-        print("=====================")
-        print("========PLOT=========")
-        print("=====================")
         if self.acq_index < len(self.sequence_points) // 2:
-            print(self.fwd_x)
-            print(self.fwd_avg)
             self.fwd_curve.setData(self.fwd_x, self.fwd_avg)
         else:
             self.bwd_curve.setData(self.bwd_x, self.bwd_avg)
 
     def redo_point_handle(self):
-        print("=====================")
-        print("========REDO=========")
-        print("=====================")
         if self.acq_index < len(self.sequence_points) // 2:
             # indo
             del self.forward_dict[self.sequence_points[self.acq_index]]
             self.fwd_avg.pop()
             self.fwd_x.pop()
-            print("passei aqui")
 
         else:
             # voltando
@@ -208,9 +206,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.next_point_b.setEnabled(False)
 
     def next_point_handle(self):
-        print("=====================")
-        print("========NEXT=========")
-        print("=====================")
         self.acq_b.setEnabled(True)
         self.redo_point_b.setEnabled(False)
         self.next_point_b.setEnabled(False)
@@ -218,6 +213,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.acq_index += 1
         self.status_l.setText(
             f"Ponto atual: {self.sequence_points[self.acq_index]} ({self.acq_index + 1} de {len(self.sequence_points)})")
+
+    def finish_stat_handle(self):
+        print("entrei nesse")
+        self.static_info()
+        if hasattr(self, "get_signal"):
+            self.get_signal.stop()
+            # aguarda a threadpool processar(não sei se realmente precisa)
+            self.get_signal.threadpool.waitForDone(2000)  # timeout em ms
+
+        if hasattr(self, "serial") and self.serial.is_open:
+            try:
+                self.serial.close()
+            except Exception:
+                pass
+
+        self.config_acq_b.setEnabled(True)
+        self.redo_point_b.setEnabled(False)
+        self.signal_plot.clear()
+
+    def static_info(self):
+        print("entrou aqui")
+        repetibilidade = {}
+
+        for p in self.pontos:
+            repetibilidade[p] = float(
+                (np.max(self.forward_dict[p] + self.backward_dict[p]) - np.min(
+                    self.forward_dict[p] + self.backward_dict[p])) * 100 / (self.pontos[-1]))
+
+        for p in self.pontos:
+            print(f"Repetibilidade em {p} = {repetibilidade[p]}%")
 
     def exit_handle(self):
         # para a thread do GetSignal e espera terminar
