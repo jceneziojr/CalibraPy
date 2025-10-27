@@ -27,7 +27,7 @@ class StatConfigDialog(QtWidgets.QDialog, Ui_Configs):
 
     def finalizar(self):
         texto = self.acq_points.text().strip()
-        self.pontos = [self.points_list.item(x).text() for x in range(self.points_list.count())]
+        self.pontos = [float(self.points_list.item(x).text()) for x in range(self.points_list.count())]
         if not texto or not self.pontos or len(self.pontos) < 2:
             pass
         else:

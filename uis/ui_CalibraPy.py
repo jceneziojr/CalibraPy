@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPyDTALRj.ui'
+## Form generated from reading UI file 'CalibraPyrdJdUw.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -199,6 +199,14 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_8.addWidget(self.label_2, 0, 0, 1, 1)
 
+        self.finish_stat_b = QPushButton(self.widget_6)
+        self.finish_stat_b.setObjectName(u"finish_stat_b")
+        self.finish_stat_b.setEnabled(False)
+        self.finish_stat_b.setMinimumSize(QSize(0, 23))
+        self.finish_stat_b.setMaximumSize(QSize(16777215, 23))
+
+        self.gridLayout_8.addWidget(self.finish_stat_b, 0, 2, 1, 1)
+
         self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter)
 
         self.gridLayout_9.addWidget(self.estatico, 0, 0, 1, 1)
@@ -259,6 +267,7 @@ class Ui_CalibraPy(object):
         self.label_2.setText(QCoreApplication.translate("CalibraPy",
                                                         u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de ajuste</span></p></body></html>",
                                                         None))
+        self.finish_stat_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab),
                                   QCoreApplication.translate("CalibraPy", u"Est\u00e1tico", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2),

@@ -49,6 +49,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.signal_plot.hideButtons()
         self.signal_plot.getPlotItem().hideAxis('bottom')
 
+        self.points_plot.setYRange(0, 5, padding=0.02)
+        self.points_plot.setMouseEnabled(x=False, y=False)
+        self.points_plot.hideButtons()
+
         # configuração processo de aquisição estatico
         self.acq_index = None
         self.sequence_points = None
@@ -70,9 +74,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         self.acquisition_points = config_dialog.pontos_acq
         self.pontos = config_dialog.pontos
-        print(f"num pontos: {self.acquisition_points}")
-        print(f"pontos: {self.pontos}")
+
+        # print(f"num pontos: {self.acquisition_points}")
+        # print(f"pontos: {self.pontos}")
         self.start_acq.setEnabled(True)
+        self.points_plot.setXRange(self.pontos[0], self.pontos[-1], padding=0.02)
 
     def startup_acquisition_process(self):
         self.acq_index = 0
@@ -147,49 +153,68 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             # indo
             self.forward_dict[self.sequence_points[self.acq_index]] = samples
             self.fwd_avg.append(mean)
+            self.fwd_x.append(self.sequence_points[self.acq_index])
 
         else:
             # voltando
             self.backward_dict[self.sequence_points[self.acq_index]] = samples
             self.bwd_avg.append(mean)
+            self.bwd_x.append(self.sequence_points[self.acq_index])
 
     def handle_samples_ready(self, samples: list):
         # método pra cuidar dos dados coletados
-        print(f"amostras recebidas pela thread: {samples}")
+        # print(f"amostras recebidas pela thread: {samples}")
         self.handle_static_acq_process(samples)
         self.redo_point_b.setEnabled(True)
         if not self.acq_index == len(self.sequence_points) - 1:
             self.next_point_b.setEnabled(True)
+        else:
+            self.finish_stat_b.setEnabled(True)
+
+        self.plot_static_points()
 
     def plot_static_points(self):
+        print("=====================")
+        print("========PLOT=========")
+        print("=====================")
         if self.acq_index < len(self.sequence_points) // 2:
-            self.fwd_x.append(self.sequence_points[self.acq_index])
+            print(self.fwd_x)
+            print(self.fwd_avg)
             self.fwd_curve.setData(self.fwd_x, self.fwd_avg)
         else:
-            self.bwd_x.append(self.sequence_points[self.acq_index])
             self.bwd_curve.setData(self.bwd_x, self.bwd_avg)
 
     def redo_point_handle(self):
+        print("=====================")
+        print("========REDO=========")
+        print("=====================")
         if self.acq_index < len(self.sequence_points) // 2:
             # indo
             del self.forward_dict[self.sequence_points[self.acq_index]]
             self.fwd_avg.pop()
+            self.fwd_x.pop()
+            print("passei aqui")
 
         else:
             # voltando
             del self.backward_dict[self.sequence_points[self.acq_index]]
             self.bwd_avg.pop()
+            self.bwd_x.pop()
+
+        self.plot_static_points()
 
         self.acq_b.setEnabled(True)
         self.redo_point_b.setEnabled(False)
         self.next_point_b.setEnabled(False)
 
     def next_point_handle(self):
+        print("=====================")
+        print("========NEXT=========")
+        print("=====================")
         self.acq_b.setEnabled(True)
         self.redo_point_b.setEnabled(False)
         self.next_point_b.setEnabled(False)
 
-        self.plot_static_points()
         self.acq_index += 1
         self.status_l.setText(
             f"Ponto atual: {self.sequence_points[self.acq_index]} ({self.acq_index + 1} de {len(self.sequence_points)})")
