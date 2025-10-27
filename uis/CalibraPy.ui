@@ -303,7 +303,7 @@ QPushButton#help_b{
                 </property>
                 <layout class="QGridLayout" name="gridLayout_6">
                  <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-                  <widget class="QPushButton" name="pushButton_3">
+                  <widget class="QPushButton" name="redo_point_b">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -313,7 +313,7 @@ QPushButton#help_b{
                   </widget>
                  </item>
                  <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-                  <widget class="QPushButton" name="pushButton_4">
+                  <widget class="QPushButton" name="next_point_b">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>

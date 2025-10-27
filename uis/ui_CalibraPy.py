@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPyrHuJwB.ui'
+## Form generated from reading UI file 'CalibraPyDTALRj.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -157,17 +157,17 @@ class Ui_CalibraPy(object):
         self.widget_4.setMaximumSize(QSize(16777215, 50))
         self.gridLayout_6 = QGridLayout(self.widget_4)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.pushButton_3 = QPushButton(self.widget_4)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setEnabled(False)
+        self.redo_point_b = QPushButton(self.widget_4)
+        self.redo_point_b.setObjectName(u"redo_point_b")
+        self.redo_point_b.setEnabled(False)
 
-        self.gridLayout_6.addWidget(self.pushButton_3, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.gridLayout_6.addWidget(self.redo_point_b, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
 
-        self.pushButton_4 = QPushButton(self.widget_4)
-        self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setEnabled(False)
+        self.next_point_b = QPushButton(self.widget_4)
+        self.next_point_b.setObjectName(u"next_point_b")
+        self.next_point_b.setEnabled(False)
 
-        self.gridLayout_6.addWidget(self.pushButton_4, 0, 2, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.gridLayout_6.addWidget(self.next_point_b, 0, 2, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
 
         self.horizontalSpacer_3 = QSpacerItem(200, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -245,8 +245,8 @@ class Ui_CalibraPy(object):
         self.status_l.setText(QCoreApplication.translate("CalibraPy",
                                                          u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Ponto atual: X   (Y de Z)</span></p></body></html>",
                                                          None))
-        self.pushButton_3.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
-        self.pushButton_4.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
+        self.redo_point_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
+        self.next_point_b.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
         # if QT_CONFIG(tooltip)
         self.widget_6.setToolTip(QCoreApplication.translate("CalibraPy",
                                                             u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",

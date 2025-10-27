@@ -6,6 +6,7 @@ import sys
 import time
 import serial
 import serial.tools.list_ports
+import numpy as np
 
 from uis.ui_CalibraPy import Ui_CalibraPy
 
@@ -26,6 +27,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.reload_devices.released.connect(self.update_com_ports)
         self.start_acq.released.connect(self._open_serial)
         self.config_acq_b.released.connect(self.open_config_dialog)
+        self.next_point_b.released.connect(self.next_point_handle)
+        self.redo_point_b.released.connect(self.redo_point_handle)
 
         # configurações iniciais
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -53,6 +56,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.backward_dict = None
         self.fwd_avg = None
         self.bwd_avg = None
+        self.done_last_point = False
+
+        # plot dos pontos estaticos
+        self.fwd_curve = self.points_plot.plot([], [], pen=None, symbol='o', symbolBrush='r', name='Fwd')
+        self.bwd_curve = self.points_plot.plot([], [], pen=None, symbol='x', symbolBrush='b', name='Bwd')
+        self.fwd_x = []
+        self.bwd_x = []
 
     def open_config_dialog(self):
         config_dialog = StatConfigDialog()
@@ -132,25 +142,57 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.get_signal.request_samples(self.acquisition_points, interval=0.5)
 
     def handle_static_acq_process(self, samples):
+        mean = float(np.mean(samples))
         if self.acq_index < len(self.sequence_points) // 2:
             # indo
             self.forward_dict[self.sequence_points[self.acq_index]] = samples
+            self.fwd_avg.append(mean)
 
         else:
             # voltando
             self.backward_dict[self.sequence_points[self.acq_index]] = samples
+            self.bwd_avg.append(mean)
 
     def handle_samples_ready(self, samples: list):
         # método pra cuidar dos dados coletados
-
         print(f"amostras recebidas pela thread: {samples}")
         self.handle_static_acq_process(samples)
-        if self.acq_index == len(self.sequence_points) - 1:
-            # desabilita o botão se chegou ao final
-            self.acq_b.setEnabled(False)
+        self.redo_point_b.setEnabled(True)
+        if not self.acq_index == len(self.sequence_points) - 1:
+            self.next_point_b.setEnabled(True)
+
+    def plot_static_points(self):
+        if self.acq_index < len(self.sequence_points) // 2:
+            self.fwd_x.append(self.sequence_points[self.acq_index])
+            self.fwd_curve.setData(self.fwd_x, self.fwd_avg)
         else:
-            # reabilita o botão
-            self.acq_b.setEnabled(True)
+            self.bwd_x.append(self.sequence_points[self.acq_index])
+            self.bwd_curve.setData(self.bwd_x, self.bwd_avg)
+
+    def redo_point_handle(self):
+        if self.acq_index < len(self.sequence_points) // 2:
+            # indo
+            del self.forward_dict[self.sequence_points[self.acq_index]]
+            self.fwd_avg.pop()
+
+        else:
+            # voltando
+            del self.backward_dict[self.sequence_points[self.acq_index]]
+            self.bwd_avg.pop()
+
+        self.acq_b.setEnabled(True)
+        self.redo_point_b.setEnabled(False)
+        self.next_point_b.setEnabled(False)
+
+    def next_point_handle(self):
+        self.acq_b.setEnabled(True)
+        self.redo_point_b.setEnabled(False)
+        self.next_point_b.setEnabled(False)
+
+        self.plot_static_points()
+        self.acq_index += 1
+        self.status_l.setText(
+            f"Ponto atual: {self.sequence_points[self.acq_index]} ({self.acq_index + 1} de {len(self.sequence_points)})")
 
     def exit_handle(self):
         # para a thread do GetSignal e espera terminar
