@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPyameKbF.ui'
+## Form generated from reading UI file 'CalibraPyLobAKG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -9,19 +9,18 @@
 ################################################################################
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
-                               QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-                               QSpacerItem, QStatusBar, QTabWidget, QWidget)
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QSpacerItem, QStatusBar, QTabWidget, QWidget)
 
 from pyqtgraph import PlotWidget
 from . import resources_rc
-
 
 class Ui_CalibraPy(object):
     def setupUi(self, CalibraPy):
@@ -29,19 +28,19 @@ class Ui_CalibraPy(object):
             CalibraPy.setObjectName(u"CalibraPy")
         CalibraPy.resize(800, 600)
         CalibraPy.setStyleSheet(u"QPushButton#reload_devices{\n"
-                                "	image: url(:/imgs/imgs/reload.png);\n"
-                                "}\n"
-                                "\n"
-                                "\n"
-                                "QPushButton#help_b{\n"
-                                "	image: url(:/imgs/imgs/help.png);\n"
-                                "}\n"
-                                "\n"
-                                "\n"
-                                "QPushButton#help_b_2{\n"
-                                "	image: url(:/imgs/imgs/help.png);\n"
-                                "}\n"
-                                "")
+"	image: url(:/imgs/imgs/reload.png);\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton#help_b{\n"
+"	image: url(:/imgs/imgs/help.png);\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton#help_b_2{\n"
+"	image: url(:/imgs/imgs/help.png);\n"
+"}\n"
+"")
         self.centralwidget = QWidget(CalibraPy)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -85,6 +84,7 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_4.addWidget(self.start_acq, 0, 1, 1, 1, Qt.AlignRight)
 
+
         self.gridLayout_3.addWidget(self.widget_2, 0, 0, 1, 1, Qt.AlignHCenter)
 
         self.widget_5 = QWidget(self.estatico)
@@ -97,6 +97,7 @@ class Ui_CalibraPy(object):
         self.signal_plot.setMaximumSize(QSize(300, 16777215))
 
         self.gridLayout_7.addWidget(self.signal_plot, 0, 0, 1, 1)
+
 
         self.gridLayout_3.addWidget(self.widget_5, 1, 0, 1, 1)
 
@@ -129,19 +130,21 @@ class Ui_CalibraPy(object):
         self.redo_point_b.setObjectName(u"redo_point_b")
         self.redo_point_b.setEnabled(False)
 
-        self.gridLayout_6.addWidget(self.redo_point_b, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.gridLayout_6.addWidget(self.redo_point_b, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.next_point_b = QPushButton(self.widget_4)
         self.next_point_b.setObjectName(u"next_point_b")
         self.next_point_b.setEnabled(False)
 
-        self.gridLayout_6.addWidget(self.next_point_b, 0, 2, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.gridLayout_6.addWidget(self.next_point_b, 0, 2, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.horizontalSpacer_3 = QSpacerItem(200, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_6.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
 
+
         self.gridLayout_5.addWidget(self.widget_4, 2, 0, 1, 1, Qt.AlignHCenter)
+
 
         self.gridLayout_3.addWidget(self.widget_3, 2, 0, 1, 1)
 
@@ -178,7 +181,9 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_8.addWidget(self.finish_stat_b, 0, 2, 1, 1)
 
-        self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
+
+        self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter|Qt.AlignBottom)
+
 
         self.gridLayout_9.addWidget(self.estatico, 0, 0, 1, 1)
 
@@ -226,7 +231,8 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_15.addWidget(self.finish_din_b, 0, 2, 1, 1)
 
-        self.gridLayout_10.addWidget(self.widget_11, 3, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
+
+        self.gridLayout_10.addWidget(self.widget_11, 3, 0, 1, 1, Qt.AlignHCenter|Qt.AlignBottom)
 
         self.widget_9 = QWidget(self.dinamico)
         self.widget_9.setObjectName(u"widget_9")
@@ -242,9 +248,11 @@ class Ui_CalibraPy(object):
         self.redo_test_b.setObjectName(u"redo_test_b")
         self.redo_test_b.setEnabled(False)
 
-        self.gridLayout_14.addWidget(self.redo_test_b, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.gridLayout_14.addWidget(self.redo_test_b, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
 
-        self.gridLayout_13.addWidget(self.widget_10, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignTop)
+
+        self.gridLayout_13.addWidget(self.widget_10, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignTop)
+
 
         self.gridLayout_10.addWidget(self.widget_9, 1, 0, 1, 1)
 
@@ -276,7 +284,9 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_11.addWidget(self.start_acq_2, 0, 1, 1, 1, Qt.AlignRight)
 
+
         self.gridLayout_10.addWidget(self.widget_7, 0, 0, 1, 1, Qt.AlignHCenter)
+
 
         self.gridLayout_16.addWidget(self.dinamico, 0, 0, 1, 1)
 
@@ -319,6 +329,7 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_2.addWidget(self.reload_devices, 0, 3, 1, 1)
 
+
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
         self.export_report_b = QPushButton(self.centralwidget)
@@ -327,7 +338,7 @@ class Ui_CalibraPy(object):
         self.export_report_b.setMinimumSize(QSize(0, 30))
         self.export_report_b.setMaximumSize(QSize(16777215, 30))
 
-        self.gridLayout.addWidget(self.export_report_b, 2, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
+        self.gridLayout.addWidget(self.export_report_b, 2, 0, 1, 1, Qt.AlignHCenter|Qt.AlignBottom)
 
         CalibraPy.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(CalibraPy)
@@ -342,99 +353,70 @@ class Ui_CalibraPy(object):
 
         self.tabWidget.setCurrentIndex(0)
 
-        QMetaObject.connectSlotsByName(CalibraPy)
 
+        QMetaObject.connectSlotsByName(CalibraPy)
     # setupUi
 
     def retranslateUi(self, CalibraPy):
         CalibraPy.setWindowTitle(QCoreApplication.translate("CalibraPy", u"MainWindow", None))
         self.config_acq_b.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
-        # if QT_CONFIG(tooltip)
-        self.help_b.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                          u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>",
-                                                          None))
-        # endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.help_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.help_b.setText("")
         self.start_acq.setText(QCoreApplication.translate("CalibraPy", u"Come\u00e7ar aquisi\u00e7\u00e3o", None))
         self.acq_b.setText(QCoreApplication.translate("CalibraPy", u"Aquisitar ponto", None))
-        self.status_l.setText(QCoreApplication.translate("CalibraPy",
-                                                         u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Ponto atual: X   (Y de Z)</span></p></body></html>",
-                                                         None))
+        self.status_l.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Ponto atual: X   (Y de Z)</span></p></body></html>", None))
         self.redo_point_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
         self.next_point_b.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
-        # if QT_CONFIG(tooltip)
-        self.widget_6.setToolTip(
-            QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
-        # endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.widget_6.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.ajuste_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Primeiro grau (reta)", None))
         self.ajuste_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Segundo grau (curva)", None))
         self.ajuste_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Terceiro grau (curva)", None))
 
-        # if QT_CONFIG(tooltip)
-        self.ajuste_combo.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                                u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
-                                                                None))
-        # endif // QT_CONFIG(tooltip)
-        # if QT_CONFIG(tooltip)
-        self.label_2.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                           u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
-                                                           None))
-        # endif // QT_CONFIG(tooltip)
-        self.label_2.setText(QCoreApplication.translate("CalibraPy",
-                                                        u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de ajuste</span></p></body></html>",
-                                                        None))
-        # if QT_CONFIG(tooltip)
-        self.finish_stat_b.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                                 u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>",
-                                                                 None))
-        # endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.ajuste_combo.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_2.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de ajuste</span></p></body></html>", None))
+#if QT_CONFIG(tooltip)
+        self.finish_stat_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.finish_stat_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab),
-                                  QCoreApplication.translate("CalibraPy", u"Est\u00e1tico", None))
-        # if QT_CONFIG(tooltip)
-        self.widget_11.setToolTip(
-            QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
-        # endif // QT_CONFIG(tooltip)
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("CalibraPy", u"Est\u00e1tico", None))
+#if QT_CONFIG(tooltip)
+        self.widget_11.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.dinamica_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Ordem zero", None))
         self.dinamica_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Primeira ordem", None))
-        self.dinamica_combo.setItemText(2,
-                                        QCoreApplication.translate("CalibraPy", u"Segunda ordem subamortecido", None))
-        self.dinamica_combo.setItemText(3,
-                                        QCoreApplication.translate("CalibraPy", u"Segunda ordem sobreamortecido", None))
+        self.dinamica_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Segunda ordem subamortecido", None))
+        self.dinamica_combo.setItemText(3, QCoreApplication.translate("CalibraPy", u"Segunda ordem sobreamortecido", None))
 
-        # if QT_CONFIG(tooltip)
-        self.dinamica_combo.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                                  u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
-                                                                  None))
-        # endif // QT_CONFIG(tooltip)
-        # if QT_CONFIG(tooltip)
-        self.label_3.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                           u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
-                                                           None))
-        # endif // QT_CONFIG(tooltip)
-        self.label_3.setText(QCoreApplication.translate("CalibraPy",
-                                                        u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de din\u00e2mica</span></p></body></html>",
-                                                        None))
-        # if QT_CONFIG(tooltip)
-        self.finish_din_b.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                                u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>",
-                                                                None))
-        # endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.dinamica_combo.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_3.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de din\u00e2mica</span></p></body></html>", None))
+#if QT_CONFIG(tooltip)
+        self.finish_din_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.finish_din_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
         self.redo_test_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ensaio", None))
         self.config_acq_b_2.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
-        # if QT_CONFIG(tooltip)
-        self.help_b_2.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                            u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>",
-                                                            None))
-        # endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.help_b_2.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.help_b_2.setText("")
         self.start_acq_2.setText(QCoreApplication.translate("CalibraPy", u"Come\u00e7ar aquisi\u00e7\u00e3o", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2),
-                                  QCoreApplication.translate("CalibraPy", u"Din\u00e2mico", None))
-        self.device_label.setText(QCoreApplication.translate("CalibraPy",
-                                                             u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>",
-                                                             None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("CalibraPy", u"Din\u00e2mico", None))
+        self.device_label.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>", None))
         self.reload_devices.setText("")
         self.export_report_b.setText(QCoreApplication.translate("CalibraPy", u"Exportar Report", None))
     # retranslateUi
+
