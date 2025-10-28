@@ -1,5 +1,8 @@
 # comando resources pyside6-rcc resources.qrc -o resources_rc.py
 #   precisa ir no arquivo Ui e mudar a linha de import para from . import resources_rc
+# tem algum bug, que na segunda execução o ponto é aquisitado todas as vezes. tem que checar oq acontece
+#   mas por enquanto, fechar e abrir pra cada
+
 
 import os
 import sys
@@ -15,6 +18,10 @@ from PySide6.QtGui import QFont
 
 from utils.get_signal import GetSignal
 from utils.config_stat import StatConfigDialog
+from utils.config_din import DinConfigDialog
+from utils.din_acquisition import DynamicTest
+
+import matplotlib.pyplot as plt
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
@@ -23,18 +30,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.setupUi(self)
         self.showMaximized()
 
-        # conectando sinais
+        # conectando sinais estatico
         self.reload_devices.released.connect(self.update_com_ports)
-        self.start_acq.released.connect(self._open_serial)
+        self.start_acq.released.connect(self.stat_open_serial)
         self.config_acq_b.released.connect(self.open_config_dialog)
         self.next_point_b.released.connect(self.next_point_handle)
         self.redo_point_b.released.connect(self.redo_point_handle)
         self.finish_stat_b.released.connect(self.finish_stat_handle)
+        self.ajuste_combo.currentIndexChanged.connect(lambda: print(self.ajuste_combo.currentIndex()))
 
-        # configurações iniciais
+        # conectando sinais dinamico
+        self.config_acq_b_2.released.connect(self.open_config_dialog_2)
+        self.start_acq_2.released.connect(self.din_open_serial)
+
+        # configurações iniciais estatico
         self.acquisition_points = 5  # numero de aquisições em cada ponto
         self.pontos = None  # Lista com os pontos da calibração estática
-        self.update_com_ports()
+        self.static_report_done = False
+
+        # configurações iniciais dinamico
+        self.amplitude_degrau = None
+        self.tempo_sessao = None
+        self.dados_plot_din = list()
 
         # arrumando texto
         font = QFont()
@@ -69,6 +86,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.fwd_x = []
         self.bwd_x = []
 
+        self.update_com_ports()
+
     def open_config_dialog(self):
         config_dialog = StatConfigDialog()
         if self.pontos and self.acquisition_points:
@@ -83,7 +102,45 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         # print(f"num pontos: {self.acquisition_points}")
         # print(f"pontos: {self.pontos}")
         self.start_acq.setEnabled(True)
+        self.finish_stat_b.setEnabled(False)
+        self.points_plot.clear()
         self.points_plot.setXRange(self.pontos[0], self.pontos[-1], padding=0.02)
+
+    def open_config_dialog_2(self):
+        config_dialog = DinConfigDialog()
+        config_dialog.exec()
+
+        self.amplitude_degrau = config_dialog.amplitude_degrau
+        self.tempo_sessao = config_dialog.tempo_sessao
+
+        self.start_acq_2.setEnabled(True)
+        self.finish_din_b.setEnabled(False)
+        self.test_plot.clear()
+        self.test_plot.setXRange(0, self.tempo_sessao, padding=0.02)
+
+    def din_open_serial(self):
+        """Opening ports for serial communication"""
+
+        self.serial = serial.Serial()
+        self.serial.dtr = True
+        self.serial.baudrate = 115200
+        self.serial.port = self.com_port = serial.tools.list_ports.comports()[
+            self.com_ports.index(self.device_combo.currentText())
+        ].name  # Defining port
+
+        if not self.serial.isOpen():  # Open port if not openned
+            self.serial.open()  # Opening port
+
+        time.sleep(2)  # Wait for Arduino and Serial to start up
+        self.start_din_test()
+
+    def start_din_test(self):
+        p1 = self.test_plot.plot()
+        self.dados_plot_din = list()
+
+        self.din_teste = DynamicTest(self.serial)
+        self.din_teste.data_ready.connect(lambda data: self.dados_plot_din.append(data))
+        # self.din_teste.session_finished.connect()
 
     def startup_acquisition_process(self):
         self.acq_index = 0
@@ -92,6 +149,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.backward_dict = dict()
         self.fwd_avg = list()
         self.bwd_avg = list()
+        self.fwd_x = []
+        self.bwd_x = []
+
+        self.fwd_curve = self.points_plot.plot([], [], pen=None, symbol='o', symbolBrush='r', name='Fwd')
+        self.bwd_curve = self.points_plot.plot([], [], pen=None, symbol='x', symbolBrush='b', name='Bwd')
 
         self.status_l.setText(
             f"Ponto atual: {self.sequence_points[self.acq_index]} ({self.acq_index + 1} de {len(self.sequence_points)})")
@@ -116,7 +178,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             if index_current != -1:
                 self.device_combo.setCurrentIndex(index_current)
 
-    def _open_serial(self):
+    def stat_open_serial(self):
         """Opening ports for serial communication"""
 
         self.serial = serial.Serial()
@@ -145,8 +207,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         self.acq_b.setEnabled(True)
         self.config_acq_b.setEnabled(False)
+        self.tab_2.setEnabled(False)
         self.startup_acquisition_process()
-
 
     def on_acq_button_pressed(self):
         # desabilita o botão enquanto a aquisição pontual está em curso (opcional)
@@ -215,7 +277,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             f"Ponto atual: {self.sequence_points[self.acq_index]} ({self.acq_index + 1} de {len(self.sequence_points)})")
 
     def finish_stat_handle(self):
-        print("entrei nesse")
         self.static_info()
         if hasattr(self, "get_signal"):
             self.get_signal.stop()
@@ -230,10 +291,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         self.config_acq_b.setEnabled(True)
         self.redo_point_b.setEnabled(False)
+        self.tab_2.setEnabled(True)
         self.signal_plot.clear()
 
     def static_info(self):
-        print("entrou aqui")
         repetibilidade = {}
 
         for p in self.pontos:
@@ -242,7 +303,78 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
                     self.forward_dict[p] + self.backward_dict[p])) * 100 / (self.pontos[-1]))
 
         for p in self.pontos:
-            print(f"Repetibilidade em {p} = {repetibilidade[p]}%")
+            print(f"Repetibilidade em {p} = {repetibilidade[p]:.2f}%")
+
+        ordem_ajuste = self.ajuste_combo.currentIndex() + 1
+
+        curva_calib_estatica = np.polyfit(self.pontos, self.fwd_avg, ordem_ajuste)
+        sensibilidade = np.polyder(curva_calib_estatica)
+
+        equacao = "y = " + " + ".join(
+            [f"{curva_calib_estatica[i]:.4f}x^{ordem_ajuste - i}" if ordem_ajuste - i > 1 else
+             (f"{curva_calib_estatica[i]:.4f}x" if ordem_ajuste - i == 1 else f"{curva_calib_estatica[i]:.4f}")
+             for i in range(len(curva_calib_estatica))]
+        )
+
+        print(f"Ordem do ajuste: {ordem_ajuste}")
+        print(f"Equação: {equacao}")
+        print(f"Sensibilidade curva: {sensibilidade}")
+
+        pontos_plot = np.linspace(self.pontos[0], self.pontos[-1], 100)
+
+        valores_curva_sensibilidade = np.polyval(sensibilidade, pontos_plot)
+        valores_curva_calib_estatica = np.polyval(curva_calib_estatica, pontos_plot)
+
+        valores_curva_calib_estatica_assist = np.polyval(curva_calib_estatica, self.pontos)
+
+        diffs = np.abs(np.array(valores_curva_calib_estatica_assist) - np.array(self.fwd_avg))
+
+        Dfm = np.max(diffs)  # máxima diferença entre o ajuste feito e os dados reais
+
+        erro_ajuste = (Dfm / self.pontos[-1]) * 100  # erro de linearidade ou conformidade
+
+        if ordem_ajuste == 1:
+            print(f"Erro de linearidade L(%) = {erro_ajuste:.2f}%")
+        else:
+            print(f"Erro de conformidade C(%) = {erro_ajuste:.2f}%")
+
+        diferencas_histerese = np.abs(
+            np.array(self.fwd_avg) - np.array(self.bwd_avg))  # diferenças ponto a ponto entre os dois sentidos
+        Hmax = np.max(diferencas_histerese)
+        erro_histerese = (Hmax / self.pontos[-1]) * 100
+
+        print(f"Erro de histerese H(%) = {erro_histerese:.2f}%")
+
+        fig, ax1 = plt.subplots(figsize=(10, 5))
+
+        # Curva de calibração - apenas dados medidos como pontos
+        ax1.plot(self.pontos, self.fwd_avg, 'o', label='Dados indo')
+        ax1.plot(self.pontos, self.bwd_avg, 'x', label='Dados voltando')
+
+        # Ajuste polinomial como linha contínua
+        ax1.plot(pontos_plot, valores_curva_calib_estatica, '-', label='Curva de calibração estática', linewidth=2)
+
+        ax1.set_xlabel('Pontos')
+        ax1.set_ylabel('Curva de Calibração', color='blue')
+        ax1.tick_params(axis='y', labelcolor='blue')
+        ax1.grid(True)
+
+        # Curva de sensibilidade como linha contínua, sem marcadores
+        ax2 = ax1.twinx()
+        ax2.plot(pontos_plot, valores_curva_sensibilidade, '-', color='orange', label='Sensibilidade', linewidth=2)
+        ax2.set_ylabel('Sensibilidade', color='orange')
+        ax2.tick_params(axis='y', labelcolor='orange')
+
+        # Legenda combinada
+        lines_1, labels_1 = ax1.get_legend_handles_labels()
+        lines_2, labels_2 = ax2.get_legend_handles_labels()
+        ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper left')
+
+        plt.title('Curva de Calibração e Sensibilidade')
+        plt.tight_layout()
+        plt.show()
+
+        self.static_report_done = True
 
     def exit_handle(self):
         # para a thread do GetSignal e espera terminar

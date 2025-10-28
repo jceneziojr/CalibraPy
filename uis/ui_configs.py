@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'configsmFPnDq.ui'
+## Form generated from reading UI file 'configszVveyG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -47,6 +47,8 @@ class Ui_Configs(object):
         self.point_input.setObjectName(u"point_input")
         self.point_input.setMinimumSize(QSize(70, 0))
         self.point_input.setMaximumSize(QSize(70, 16777215))
+        self.point_input.setLayoutDirection(Qt.LeftToRight)
+        self.point_input.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.point_input, 0, 1, 1, 1)
 
@@ -89,6 +91,8 @@ class Ui_Configs(object):
         self.acq_points.setObjectName(u"acq_points")
         self.acq_points.setMinimumSize(QSize(70, 0))
         self.acq_points.setMaximumSize(QSize(70, 16777215))
+        self.acq_points.setLayoutDirection(Qt.LeftToRight)
+        self.acq_points.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.gridLayout_6.addWidget(self.acq_points, 0, 1, 1, 1)
 
@@ -137,7 +141,11 @@ class Ui_Configs(object):
 "", None))
 #endif // QT_CONFIG(tooltip)
         self.remove_point_b.setText(QCoreApplication.translate("Configs", u"Remover Ponto", None))
+#if QT_CONFIG(tooltip)
+        self.widget_4.setToolTip(QCoreApplication.translate("Configs", u"<html><head/><body><p>Defina quantas aquisi\u00e7\u00f5es ser\u00e3o feitas por ponto. Com esta fun\u00e7\u00e3o, podemos rastrear informa\u00e7\u00f5es como repetibilidade. O n\u00famero de aquisi\u00e7\u00f5es por ponto pode estar entre 1 e 10.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label_3.setText(QCoreApplication.translate("Configs", u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Aquisi\u00e7\u00f5es por ponto</span></p></body></html>", None))
+        self.acq_points.setText(QCoreApplication.translate("Configs", u"5", None))
         self.label.setText(QCoreApplication.translate("Configs", u"<html><head/><body><p><span style=\" font-size:14pt; font-weight:700;\">Configura\u00e7\u00e3o da calibra\u00e7\u00e3o</span></p></body></html>", None))
         self.finish_b.setText(QCoreApplication.translate("Configs", u"Finalizar", None))
     # retranslateUi

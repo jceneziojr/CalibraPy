@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPyrdJdUw.ui'
+## Form generated from reading UI file 'CalibraPyameKbF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -36,48 +36,16 @@ class Ui_CalibraPy(object):
                                 "QPushButton#help_b{\n"
                                 "	image: url(:/imgs/imgs/help.png);\n"
                                 "}\n"
+                                "\n"
+                                "\n"
+                                "QPushButton#help_b_2{\n"
+                                "	image: url(:/imgs/imgs/help.png);\n"
+                                "}\n"
                                 "")
         self.centralwidget = QWidget(CalibraPy)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.widget = QWidget(self.centralwidget)
-        self.widget.setObjectName(u"widget")
-        self.widget.setMinimumSize(QSize(0, 50))
-        self.widget.setMaximumSize(QSize(16777215, 50))
-        self.gridLayout_2 = QGridLayout(self.widget)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.device_combo = QComboBox(self.widget)
-        self.device_combo.setObjectName(u"device_combo")
-        self.device_combo.setMinimumSize(QSize(300, 23))
-        self.device_combo.setMaximumSize(QSize(300, 23))
-
-        self.gridLayout_2.addWidget(self.device_combo, 0, 2, 1, 1)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 0, 1, 1)
-
-        self.device_label = QLabel(self.widget)
-        self.device_label.setObjectName(u"device_label")
-        self.device_label.setMinimumSize(QSize(0, 30))
-        self.device_label.setMaximumSize(QSize(120, 30))
-
-        self.gridLayout_2.addWidget(self.device_label, 0, 1, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_2.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
-
-        self.reload_devices = QPushButton(self.widget)
-        self.reload_devices.setObjectName(u"reload_devices")
-        self.reload_devices.setMinimumSize(QSize(23, 23))
-        self.reload_devices.setMaximumSize(QSize(23, 23))
-
-        self.gridLayout_2.addWidget(self.reload_devices, 0, 3, 1, 1)
-
-        self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
-
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tab = QWidget()
@@ -186,11 +154,14 @@ class Ui_CalibraPy(object):
         self.widget_6.setObjectName(u"widget_6")
         self.gridLayout_8 = QGridLayout(self.widget_6)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.comboBox = QComboBox(self.widget_6)
-        self.comboBox.setObjectName(u"comboBox")
-        self.comboBox.setEnabled(True)
+        self.ajuste_combo = QComboBox(self.widget_6)
+        self.ajuste_combo.addItem("")
+        self.ajuste_combo.addItem("")
+        self.ajuste_combo.addItem("")
+        self.ajuste_combo.setObjectName(u"ajuste_combo")
+        self.ajuste_combo.setEnabled(True)
 
-        self.gridLayout_8.addWidget(self.comboBox, 0, 1, 1, 1)
+        self.gridLayout_8.addWidget(self.ajuste_combo, 0, 1, 1, 1)
 
         self.label_2 = QLabel(self.widget_6)
         self.label_2.setObjectName(u"label_2")
@@ -207,16 +178,156 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_8.addWidget(self.finish_stat_b, 0, 2, 1, 1)
 
-        self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter)
+        self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
 
         self.gridLayout_9.addWidget(self.estatico, 0, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
+        self.gridLayout_16 = QGridLayout(self.tab_2)
+        self.gridLayout_16.setObjectName(u"gridLayout_16")
+        self.dinamico = QWidget(self.tab_2)
+        self.dinamico.setObjectName(u"dinamico")
+        self.dinamico.setEnabled(True)
+        self.gridLayout_10 = QGridLayout(self.dinamico)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.test_plot = PlotWidget(self.dinamico)
+        self.test_plot.setObjectName(u"test_plot")
+
+        self.gridLayout_10.addWidget(self.test_plot, 2, 0, 1, 1)
+
+        self.widget_11 = QWidget(self.dinamico)
+        self.widget_11.setObjectName(u"widget_11")
+        self.gridLayout_15 = QGridLayout(self.widget_11)
+        self.gridLayout_15.setObjectName(u"gridLayout_15")
+        self.dinamica_combo = QComboBox(self.widget_11)
+        self.dinamica_combo.addItem("")
+        self.dinamica_combo.addItem("")
+        self.dinamica_combo.addItem("")
+        self.dinamica_combo.addItem("")
+        self.dinamica_combo.setObjectName(u"dinamica_combo")
+        self.dinamica_combo.setEnabled(True)
+
+        self.gridLayout_15.addWidget(self.dinamica_combo, 0, 1, 1, 1)
+
+        self.label_3 = QLabel(self.widget_11)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(0, 23))
+        self.label_3.setMaximumSize(QSize(120, 23))
+
+        self.gridLayout_15.addWidget(self.label_3, 0, 0, 1, 1)
+
+        self.finish_din_b = QPushButton(self.widget_11)
+        self.finish_din_b.setObjectName(u"finish_din_b")
+        self.finish_din_b.setEnabled(False)
+        self.finish_din_b.setMinimumSize(QSize(0, 23))
+        self.finish_din_b.setMaximumSize(QSize(16777215, 23))
+
+        self.gridLayout_15.addWidget(self.finish_din_b, 0, 2, 1, 1)
+
+        self.gridLayout_10.addWidget(self.widget_11, 3, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
+
+        self.widget_9 = QWidget(self.dinamico)
+        self.widget_9.setObjectName(u"widget_9")
+        self.gridLayout_13 = QGridLayout(self.widget_9)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.widget_10 = QWidget(self.widget_9)
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setMinimumSize(QSize(0, 50))
+        self.widget_10.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_14 = QGridLayout(self.widget_10)
+        self.gridLayout_14.setObjectName(u"gridLayout_14")
+        self.redo_test_b = QPushButton(self.widget_10)
+        self.redo_test_b.setObjectName(u"redo_test_b")
+        self.redo_test_b.setEnabled(False)
+
+        self.gridLayout_14.addWidget(self.redo_test_b, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignVCenter)
+
+        self.gridLayout_13.addWidget(self.widget_10, 0, 0, 1, 1, Qt.AlignHCenter | Qt.AlignTop)
+
+        self.gridLayout_10.addWidget(self.widget_9, 1, 0, 1, 1)
+
+        self.widget_7 = QWidget(self.dinamico)
+        self.widget_7.setObjectName(u"widget_7")
+        self.widget_7.setMinimumSize(QSize(0, 50))
+        self.widget_7.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_11 = QGridLayout(self.widget_7)
+        self.gridLayout_11.setObjectName(u"gridLayout_11")
+        self.config_acq_b_2 = QPushButton(self.widget_7)
+        self.config_acq_b_2.setObjectName(u"config_acq_b_2")
+        self.config_acq_b_2.setMinimumSize(QSize(200, 23))
+        self.config_acq_b_2.setMaximumSize(QSize(200, 23))
+
+        self.gridLayout_11.addWidget(self.config_acq_b_2, 0, 0, 1, 1, Qt.AlignLeft)
+
+        self.help_b_2 = QPushButton(self.widget_7)
+        self.help_b_2.setObjectName(u"help_b_2")
+        self.help_b_2.setMinimumSize(QSize(23, 23))
+        self.help_b_2.setMaximumSize(QSize(23, 23))
+
+        self.gridLayout_11.addWidget(self.help_b_2, 0, 2, 1, 1)
+
+        self.start_acq_2 = QPushButton(self.widget_7)
+        self.start_acq_2.setObjectName(u"start_acq_2")
+        self.start_acq_2.setEnabled(False)
+        self.start_acq_2.setMinimumSize(QSize(200, 23))
+        self.start_acq_2.setMaximumSize(QSize(200, 23))
+
+        self.gridLayout_11.addWidget(self.start_acq_2, 0, 1, 1, 1, Qt.AlignRight)
+
+        self.gridLayout_10.addWidget(self.widget_7, 0, 0, 1, 1, Qt.AlignHCenter)
+
+        self.gridLayout_16.addWidget(self.dinamico, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.tab_2, "")
 
         self.gridLayout.addWidget(self.tabWidget, 1, 0, 1, 1)
+
+        self.widget = QWidget(self.centralwidget)
+        self.widget.setObjectName(u"widget")
+        self.widget.setMinimumSize(QSize(0, 50))
+        self.widget.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_2 = QGridLayout(self.widget)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.device_combo = QComboBox(self.widget)
+        self.device_combo.setObjectName(u"device_combo")
+        self.device_combo.setMinimumSize(QSize(300, 23))
+        self.device_combo.setMaximumSize(QSize(300, 23))
+
+        self.gridLayout_2.addWidget(self.device_combo, 0, 2, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 0, 1, 1)
+
+        self.device_label = QLabel(self.widget)
+        self.device_label.setObjectName(u"device_label")
+        self.device_label.setMinimumSize(QSize(0, 30))
+        self.device_label.setMaximumSize(QSize(150, 30))
+
+        self.gridLayout_2.addWidget(self.device_label, 0, 1, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
+
+        self.reload_devices = QPushButton(self.widget)
+        self.reload_devices.setObjectName(u"reload_devices")
+        self.reload_devices.setMinimumSize(QSize(23, 23))
+        self.reload_devices.setMaximumSize(QSize(23, 23))
+
+        self.gridLayout_2.addWidget(self.reload_devices, 0, 3, 1, 1)
+
+        self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
+
+        self.export_report_b = QPushButton(self.centralwidget)
+        self.export_report_b.setObjectName(u"export_report_b")
+        self.export_report_b.setEnabled(False)
+        self.export_report_b.setMinimumSize(QSize(0, 30))
+        self.export_report_b.setMaximumSize(QSize(16777215, 30))
+
+        self.gridLayout.addWidget(self.export_report_b, 2, 0, 1, 1, Qt.AlignHCenter | Qt.AlignBottom)
 
         CalibraPy.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(CalibraPy)
@@ -237,10 +348,6 @@ class Ui_CalibraPy(object):
 
     def retranslateUi(self, CalibraPy):
         CalibraPy.setWindowTitle(QCoreApplication.translate("CalibraPy", u"MainWindow", None))
-        self.device_label.setText(QCoreApplication.translate("CalibraPy",
-                                                             u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>",
-                                                             None))
-        self.reload_devices.setText("")
         self.config_acq_b.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
         # if QT_CONFIG(tooltip)
         self.help_b.setToolTip(QCoreApplication.translate("CalibraPy",
@@ -256,20 +363,78 @@ class Ui_CalibraPy(object):
         self.redo_point_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
         self.next_point_b.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
         # if QT_CONFIG(tooltip)
-        self.widget_6.setToolTip(QCoreApplication.translate("CalibraPy",
-                                                            u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
-                                                            None))
+        self.widget_6.setToolTip(
+            QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+        # endif // QT_CONFIG(tooltip)
+        self.ajuste_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Primeiro grau (reta)", None))
+        self.ajuste_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Segundo grau (curva)", None))
+        self.ajuste_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Terceiro grau (curva)", None))
+
+        # if QT_CONFIG(tooltip)
+        self.ajuste_combo.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                                u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
+                                                                None))
         # endif // QT_CONFIG(tooltip)
         # if QT_CONFIG(tooltip)
-        self.label_2.setToolTip(
-            QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.label_2.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                           u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
+                                                           None))
         # endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("CalibraPy",
                                                         u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de ajuste</span></p></body></html>",
                                                         None))
+        # if QT_CONFIG(tooltip)
+        self.finish_stat_b.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                                 u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>",
+                                                                 None))
+        # endif // QT_CONFIG(tooltip)
         self.finish_stat_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab),
                                   QCoreApplication.translate("CalibraPy", u"Est\u00e1tico", None))
+        # if QT_CONFIG(tooltip)
+        self.widget_11.setToolTip(
+            QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+        # endif // QT_CONFIG(tooltip)
+        self.dinamica_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Ordem zero", None))
+        self.dinamica_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Primeira ordem", None))
+        self.dinamica_combo.setItemText(2,
+                                        QCoreApplication.translate("CalibraPy", u"Segunda ordem subamortecido", None))
+        self.dinamica_combo.setItemText(3,
+                                        QCoreApplication.translate("CalibraPy", u"Segunda ordem sobreamortecido", None))
+
+        # if QT_CONFIG(tooltip)
+        self.dinamica_combo.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                                  u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
+                                                                  None))
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                           u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>",
+                                                           None))
+        # endif // QT_CONFIG(tooltip)
+        self.label_3.setText(QCoreApplication.translate("CalibraPy",
+                                                        u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de din\u00e2mica</span></p></body></html>",
+                                                        None))
+        # if QT_CONFIG(tooltip)
+        self.finish_din_b.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                                u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>",
+                                                                None))
+        # endif // QT_CONFIG(tooltip)
+        self.finish_din_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
+        self.redo_test_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ensaio", None))
+        self.config_acq_b_2.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
+        # if QT_CONFIG(tooltip)
+        self.help_b_2.setToolTip(QCoreApplication.translate("CalibraPy",
+                                                            u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>",
+                                                            None))
+        # endif // QT_CONFIG(tooltip)
+        self.help_b_2.setText("")
+        self.start_acq_2.setText(QCoreApplication.translate("CalibraPy", u"Come\u00e7ar aquisi\u00e7\u00e3o", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2),
                                   QCoreApplication.translate("CalibraPy", u"Din\u00e2mico", None))
+        self.device_label.setText(QCoreApplication.translate("CalibraPy",
+                                                             u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>",
+                                                             None))
+        self.reload_devices.setText("")
+        self.export_report_b.setText(QCoreApplication.translate("CalibraPy", u"Exportar Report", None))
     # retranslateUi
