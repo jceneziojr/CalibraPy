@@ -61,6 +61,7 @@ class GetSignal(QObject):
                 if len(parts) >= 2:
                     try:
                         temp = int(parts[-2].decode("UTF-8")) * 0.00488
+                        print(temp)
                         self.buffer.append(temp)
                         # emite para atualizar plot
                         self.data_ready.emit(list(self.buffer))

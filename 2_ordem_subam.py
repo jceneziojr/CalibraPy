@@ -170,7 +170,7 @@ class SundaresanSubamortecido:
 # ===========================================================
 K_real = 2.0
 wn_real = 2.0
-xi_real = 0.5  # subamortecido
+xi_real = 0.75  # subamortecido
 t_final = 30
 dt = 0.01
 t = np.arange(0, t_final, dt)

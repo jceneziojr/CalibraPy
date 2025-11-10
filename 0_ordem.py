@@ -15,7 +15,6 @@ class OrdemZero:
         self.y_inf = None
         self.modelo = None
 
-    # ------------------------------------------------------------------------------------
     def ajustar(self):
         tam_amostra = len(self.y)
 
@@ -32,7 +31,6 @@ class OrdemZero:
         print(f"G(s) = {self.K:.3f}")
         print("=======================================")
 
-    # ------------------------------------------------------------------------------------
     def plot_comparacao(self):
         if self.modelo is None:
             raise RuntimeError("Modelo ainda não ajustado. Execute ajustar() primeiro.")

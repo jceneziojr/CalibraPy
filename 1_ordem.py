@@ -76,8 +76,8 @@ class PrimeiraOrdem:
 
 # --- gera dados simulados ---
 K_real = 2.0
-tau_real = 1.5
-t_final = 10
+tau_real = 4
+t_final = 30
 dt = 0.01
 t = np.arange(0, t_final, dt)
 y_clean = K_real * (1 - np.exp(-t / tau_real))

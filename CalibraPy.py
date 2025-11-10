@@ -30,6 +30,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.setupUi(self)
         self.showMaximized()
 
+        self.serial = None
+
         # conectando sinais estatico
         self.reload_devices.released.connect(self.update_com_ports)
         self.start_acq.released.connect(self.stat_open_serial)
@@ -41,7 +43,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         # conectando sinais dinamico
         self.config_acq_b_2.released.connect(self.open_config_dialog_2)
-        self.start_acq_2.released.connect(self.din_open_serial)
+        self.start_acq_2.released.connect(self.start_din_test)
+        self.redo_test_b.released.connect(self.redo_teste_handle)
+        self.finish_din_b.released.connect(self.finish_din_test_handle)
 
         # configurações iniciais estatico
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -52,6 +56,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.amplitude_degrau = None
         self.tempo_sessao = None
         self.dados_plot_din = list()
+        self.first_point_done = False
+        self.din_x = list()
+        self.din_teste = None
 
         # arrumando texto
         font = QFont()
@@ -60,7 +67,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.status_l.setFont(font)
         self.status_l.setText("-----------------")
 
-        # ajustes do plot
+        # ajustes do plot estatico
         self.signal_plot.setXRange(0, 100, padding=0.02)
         self.signal_plot.setYRange(0, 5, padding=0.02)
         self.signal_plot.setMouseEnabled(x=False, y=False)
@@ -70,6 +77,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.points_plot.setYRange(0, 5, padding=0.02)
         self.points_plot.setMouseEnabled(x=False, y=False)
         self.points_plot.hideButtons()
+
+        # ajustes do plot estatico
+        self.test_plot.setYRange(0, 5, padding=0.02)
+        self.test_plot.setMouseEnabled(x=False, y=False)
+        self.test_plot.hideButtons()
 
         # configuração processo de aquisição estatico
         self.acq_index = None
@@ -108,6 +120,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def open_config_dialog_2(self):
         config_dialog = DinConfigDialog()
+        if self.amplitude_degrau and self.tempo_sessao:
+            config_dialog.amp_deg.setText(str(self.amplitude_degrau))
+            config_dialog.tempo_sesh.setText(str(self.tempo_sessao))
         config_dialog.exec()
 
         self.amplitude_degrau = config_dialog.amplitude_degrau
@@ -117,30 +132,62 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.finish_din_b.setEnabled(False)
         self.test_plot.clear()
         self.test_plot.setXRange(0, self.tempo_sessao, padding=0.02)
+        self.din_open_serial()
 
     def din_open_serial(self):
         """Opening ports for serial communication"""
+        if not self.serial:
+            print("ABRINDO SERIAL ...")
+            self.serial = serial.Serial()
+            self.serial.dtr = True
+            self.serial.baudrate = 115200
+            self.serial.port = self.com_port = serial.tools.list_ports.comports()[
+                self.com_ports.index(self.device_combo.currentText())
+            ].name  # Defining port
 
-        self.serial = serial.Serial()
-        self.serial.dtr = True
-        self.serial.baudrate = 115200
-        self.serial.port = self.com_port = serial.tools.list_ports.comports()[
-            self.com_ports.index(self.device_combo.currentText())
-        ].name  # Defining port
+            if not self.serial.isOpen():  # Open port if not openned
+                self.serial.open()  # Opening port
 
-        if not self.serial.isOpen():  # Open port if not openned
-            self.serial.open()  # Opening port
-
-        time.sleep(2)  # Wait for Arduino and Serial to start up
-        self.start_din_test()
+            time.sleep(2)  # Wait for Arduino and Serial to start up
+        
+    def finish_din_test_handle(self):
+        self.redo_test_b.setEnabled(False)
+        self.config_acq_b_2.setEnabled(False)
+        if self.dados_plot_din and self.din_x:
+            print(len(self.din_x))
+            print("DADOS DE TESTE DINÂMICO PRONTOS PARA TRATAMENTO")
+            dinamica = self.dinamica_combo.currentText()
+            print(f"ROTINA: {dinamica}")
 
     def start_din_test(self):
-        p1 = self.test_plot.plot()
+        self.din_plot = self.test_plot.plot()
         self.dados_plot_din = list()
 
-        self.din_teste = DynamicTest(self.serial)
-        self.din_teste.data_ready.connect(lambda data: self.dados_plot_din.append(data))
-        # self.din_teste.session_finished.connect()
+        if self.din_teste:
+            self.din_teste = DynamicTest(self.serial, _reset_buffer=False)
+        else:
+            self.din_teste = DynamicTest(self.serial)
+        self.din_teste.data_ready.connect(self.din_plot_handle)
+        self.din_teste.session_finished.connect(self.din_session_finish_handle)
+        self.dt = 0.01
+        self.din_teste.start(self.tempo_sessao, dt=self.dt)
+        self.start_acq_2.setEnabled(False)
+
+    def din_plot_handle(self, t, y):
+        self.dados_plot_din.append(y)
+        self.din_x.append(t)
+
+        self.din_plot.setData(self.din_x, self.dados_plot_din)
+        
+    def din_session_finish_handle(self):
+        self.redo_test_b.setEnabled(True)
+        self.finish_din_b.setEnabled(True)
+    
+    def redo_teste_handle(self):
+        self.redo_test_b.setEnabled(False)
+        self.config_acq_b_2.setEnabled(True)
+        self.din_x = list()
+
 
     def startup_acquisition_process(self):
         self.acq_index = 0
@@ -180,18 +227,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def stat_open_serial(self):
         """Opening ports for serial communication"""
+        
+        if not self.serial:
+            self.serial = serial.Serial()
+            self.serial.dtr = True
+            self.serial.baudrate = 115200
+            self.serial.port = self.com_port = serial.tools.list_ports.comports()[
+                self.com_ports.index(self.device_combo.currentText())
+            ].name  # Defining port
 
-        self.serial = serial.Serial()
-        self.serial.dtr = True
-        self.serial.baudrate = 115200
-        self.serial.port = self.com_port = serial.tools.list_ports.comports()[
-            self.com_ports.index(self.device_combo.currentText())
-        ].name  # Defining port
+            if not self.serial.isOpen():  # Open port if not openned
+                self.serial.open()  # Opening port
 
-        if not self.serial.isOpen():  # Open port if not openned
-            self.serial.open()  # Opening port
-
-        time.sleep(2)  # Wait for Arduino and Serial to start up
+            time.sleep(2)  # Wait for Arduino and Serial to start up
         self.start_acquisition()
 
     def start_acquisition(self):

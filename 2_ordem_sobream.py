@@ -174,8 +174,8 @@ class SundaresanSobreamortecido:
 # Gerando dados simulados
 K_real = 2.0
 wn_real = 2.0
-zeta_real = 1.5
-t_final = 10
+zeta_real = 1.001
+t_final = 30
 dt = 0.01
 t = np.arange(0, t_final, dt)
 
