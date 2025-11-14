@@ -171,7 +171,7 @@ QPushButton#help_b_2{
                  </size>
                 </property>
                 <property name="text">
-                 <string>Aquisitar ponto</string>
+                 <string>Adquirir ponto</string>
                 </property>
                </widget>
               </item>

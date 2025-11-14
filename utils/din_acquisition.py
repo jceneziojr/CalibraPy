@@ -62,6 +62,7 @@ class DynamicTest(QObject):
                         self.collected_time.append(elapsed)
                         # envia tempo e valor
                         self.data_ready.emit(elapsed, value)
+                        print(value)
                     except Exception:
                         pass
             except Exception as e:

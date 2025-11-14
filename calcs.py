@@ -47,7 +47,7 @@ print(bwd_avg)
 print(repetibilidade)
 
 ordem_ajuste = 2
-curva_calib_estatica = np.polyfit(points, fwd_avg, ordem_ajuste)
+curva_calib_estatica = np.polyfit(points, fwd_avg + bwd_avg, ordem_ajuste)
 sensibilidade = np.polyder(curva_calib_estatica)
 
 print(curva_calib_estatica)

@@ -10,6 +10,8 @@ import time
 import serial
 import serial.tools.list_ports
 import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 from uis.ui_CalibraPy import Ui_CalibraPy
 
@@ -20,6 +22,7 @@ from utils.get_signal import GetSignal
 from utils.config_stat import StatConfigDialog
 from utils.config_din import DinConfigDialog
 from utils.din_acquisition import DynamicTest
+from utils.help_dialogs import DynamicHelp, StaticHelp
 
 import matplotlib.pyplot as plt
 
@@ -40,12 +43,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.redo_point_b.released.connect(self.redo_point_handle)
         self.finish_stat_b.released.connect(self.finish_stat_handle)
         self.ajuste_combo.currentIndexChanged.connect(lambda: print(self.ajuste_combo.currentIndex()))
+        self.help_b.released.connect(self.open_help_s)
 
         # conectando sinais dinamico
         self.config_acq_b_2.released.connect(self.open_config_dialog_2)
         self.start_acq_2.released.connect(self.start_din_test)
         self.redo_test_b.released.connect(self.redo_teste_handle)
         self.finish_din_b.released.connect(self.finish_din_test_handle)
+        self.help_b_2.released.connect(self.open_help_d)
 
         # configurações iniciais estatico
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -149,7 +154,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
                 self.serial.open()  # Opening port
 
             time.sleep(2)  # Wait for Arduino and Serial to start up
-        
+
     def finish_din_test_handle(self):
         self.redo_test_b.setEnabled(False)
         self.config_acq_b_2.setEnabled(False)
@@ -158,36 +163,123 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             print("DADOS DE TESTE DINÂMICO PRONTOS PARA TRATAMENTO")
             dinamica = self.dinamica_combo.currentText()
             print(f"ROTINA: {dinamica}")
+            diffs = np.diff(self.din_x)
+
+            step = np.mean(diffs)
+            max_error = np.max(np.abs(diffs - step))
+
+            print(f"Passo médio: {step}")
+            print(f"Erro máximo: {max_error}")
+
+            if max_error < 1e-9:
+                print("➡️ O vetor é uniformemente espaçado.")
+            else:
+                print("⚠️ O espaçamento NÃO é uniforme.")
+
+    def open_help_s(self):
+        dialog = StaticHelp()
+        dialog.exec()
+
+    def open_help_d(self):
+        dialog = DynamicHelp()
+        dialog.exec()
 
     def start_din_test(self):
         self.din_plot = self.test_plot.plot()
         self.dados_plot_din = list()
 
+        self.start_acq_2.setEnabled(False)
+        self._start_updatable_plot()
+
+        self.dt = 0.001
+
         if self.din_teste:
             self.din_teste = DynamicTest(self.serial, _reset_buffer=False)
         else:
             self.din_teste = DynamicTest(self.serial)
-        self.din_teste.data_ready.connect(self.din_plot_handle)
-        self.din_teste.session_finished.connect(self.din_session_finish_handle)
-        self.dt = 0.01
-        self.din_teste.start(self.tempo_sessao, dt=self.dt)
-        self.start_acq_2.setEnabled(False)
+
+        loop_start = time.time()
+
+        self._running = True
+
+        while self._running:
+            st = time.time()
+
+            raw = self.serial.read(14)
+            parts = raw.split()
+            elapsed = st - loop_start
+            if elapsed >= self.tempo_sessao:
+                self._running = False
+
+            if len(parts) >= 2:
+                try:
+                    value = int(parts[-2].decode("UTF-8")) * 0.00488
+                    self.din_plot_handle(elapsed, value)
+                    self._update_plot()
+
+                except Exception as e:
+                    print("erro na leitura serial:", e)
+
+            # et = time.time()
+            # print(et - st)
+            # delay = max(0, self.dt + (st - et))
+            # if delay > 0:
+            #     time.sleep(delay)
+
+        # self.din_teste.data_ready.connect(self.din_plot_handle)
+        # self.din_teste.session_finished.connect(self.din_session_finish_handle)
+        self.din_session_finish_handle()
+
+        # self.din_teste.start(self.tempo_sessao, dt=self.dt)
+
+    def _start_updatable_plot(self):
+        """Method to start updatable plot"""
+
+        # Changing Matplotlib backend
+        mpl.use("Qt5Agg")
+
+        # create the figure and axes objects
+        self.fig, self.ax = plt.subplots()
+        self.fig._label = "iter_plot"  # Defining label
+
+        # Iteractive plot on
+        plt.ion()
+
+        # Title and labels and plot creation
+        # plt.title(self.title)
+        plt.xlabel("Time (samples)")
+        plt.ylabel("Voltage")
+        plt.grid()
+        self.line = self.ax.plot([], [])
+        plt.show()
+
+    def _update_plot(self):
+        """Method to update plot already started using _start_updatable_plot
+        using x_value and y_value as new data"""
+
+        self.ax.clear()
+        # plt.title(self.title)
+        plt.xlabel("Time (samples)")
+        plt.ylabel("Voltage")
+        plt.grid()
+
+        self.ax.plot(self.din_x, self.dados_plot_din, "o-")
+        # plt.legend(self.legend)
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
 
     def din_plot_handle(self, t, y):
         self.dados_plot_din.append(y)
         self.din_x.append(t)
 
-        self.din_plot.setData(self.din_x, self.dados_plot_din)
-        
     def din_session_finish_handle(self):
         self.redo_test_b.setEnabled(True)
         self.finish_din_b.setEnabled(True)
-    
+
     def redo_teste_handle(self):
         self.redo_test_b.setEnabled(False)
         self.config_acq_b_2.setEnabled(True)
         self.din_x = list()
-
 
     def startup_acquisition_process(self):
         self.acq_index = 0
@@ -227,7 +319,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def stat_open_serial(self):
         """Opening ports for serial communication"""
-        
+
         if not self.serial:
             self.serial = serial.Serial()
             self.serial.dtr = True
