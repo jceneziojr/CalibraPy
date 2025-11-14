@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 points = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -46,8 +47,10 @@ print(fwd_avg)
 print(bwd_avg)
 print(repetibilidade)
 
+avg_pts = [(f + b) / 2 for f, b in zip(fwd_avg, bwd_avg)]
+
 ordem_ajuste = 2
-curva_calib_estatica = np.polyfit(points, fwd_avg + bwd_avg, ordem_ajuste)
+curva_calib_estatica = np.polyfit(points, avg_pts, ordem_ajuste)
 sensibilidade = np.polyder(curva_calib_estatica)
 
 print(curva_calib_estatica)
@@ -58,7 +61,7 @@ valores_curva_sensibilidade = np.polyval(sensibilidade, points)
 print(valores_curva_sensibilidade)
 
 valores_curva_calib_estatica = np.polyval(curva_calib_estatica, points)
-diffs = np.abs(np.array(valores_curva_calib_estatica) - np.array(fwd_avg))
+diffs = np.abs(np.array(valores_curva_calib_estatica) - np.array(avg_pts))
 
 Dfm = np.max(diffs)  # máxima diferença entre o ajuste feito e os dados reais
 
@@ -74,3 +77,24 @@ Hmax = np.max(diferencas_histerese)
 erro_histerese = (Hmax / points[-1]) * 100
 
 print(f"Erro de histerese H(%) = {erro_histerese:.2f}%")
+
+x_plot = np.linspace(min(points), max(points), 300)
+
+fig_ccs, ax = plt.subplots(figsize=(10, 5))
+
+ax.plot(points, avg_pts, 'o', label='Pontos médios')
+ax.plot(x_plot, np.poly1d(curva_calib_estatica)(x_plot), '-',
+        label='Curva de calibração')
+
+ax.set_xlabel('Entrada')
+ax.set_ylabel('Saída')
+ax.set_title('Curva de calibração estática')
+ax.grid(True)
+ax.legend()
+
+fig_ccs.tight_layout()
+
+
+class CaracteristicasEstaticas:
+    def __init__(self, points: list, fwd:dict, bwd):
+        pass
