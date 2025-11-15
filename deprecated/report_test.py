@@ -17,7 +17,7 @@ import shutil
 import re
 import io
 
-from calcs import car_est
+from report_codes.static import car_est
 import matplotlib.pyplot as plt
 
 
@@ -174,7 +174,7 @@ def gerar_relatorio_calibracao(
 
     eq_ccs = polyfit_to_latex(pol_eq_ccs)
 
-    img_eq_ccs = latex_to_rl_image(eq_ccs, width=120, height=40)
+    img_eq_ccs = latex_to_rl_image(eq_ccs, width=120 + (ordem_aj - 1) * 20, height=40)
 
     img_eq_ccs.hAlign = "CENTER"
     story.append(img_eq_ccs)
@@ -190,27 +190,18 @@ def gerar_relatorio_calibracao(
 
     eq_csens = polyfit_to_latex(pol_eq_csens)
 
-    img_eq_csens = latex_to_rl_image(eq_csens, width=120, height=40)
+    img_eq_csens = latex_to_rl_image(eq_csens, width=120 + (ordem_aj - 1) * 20, height=40)
 
     img_eq_csens.hAlign = "CENTER"
     story.append(img_eq_csens)
 
     story.append(PageBreak())
 
-    # story.append(Paragraph(f"Repetibilidade = {repet:.2f}%", estilo_secao))
-    #
-    # if ordem_aj == 1:
-    #     story.append(Paragraph(f"Erro de linearidade L(%) = {erro_aj:.2f}%", estilo_secao))
-    # else:
-    #     story.append(Paragraph(f"Erro de conformidade C(%) = {erro_aj:.2f}%", estilo_secao))
-    #
-    # story.append(Paragraph(f"Erro de histerese H(%) = {erro_hist:.2f}%", estilo_secao))
-
     # Linhas da tabela
     # Monta as linhas
     linhas = [
+        ["Erro Aleatório EA", f"{erro_al:.2f}"],
         ["Repetibilidade (%)", f"{repet:.2f}%"],
-        ["Erro Aleatório EA", f"{erro_al:.2f}"]
     ]
 
     if ordem_aj == 1:
@@ -243,6 +234,12 @@ def gerar_relatorio_calibracao(
     img_hist = fig_to_rl_image(figure_hist, width=400, height=200)  # imagem histerese
     img_hist.hAlign = "CENTER"
     story.append(img_hist)
+
+    story.append(PageBreak())
+
+    # -------------------------------------------------------
+    # CARAC DINÂMICAS
+    # -------------------------------------------------------
 
     def rodape(canvas, doc):
         canvas.setFont("Courier", 10)

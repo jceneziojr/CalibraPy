@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.family'] = 'Courier New'
+
 points = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 forward_dict = {
@@ -113,15 +115,16 @@ class CaracteristicasEstaticas:
     # ============================================================
     def _gerar_plots(self):
         """Gera as três figuras: curva, sensibilidade e histerese."""
-        x_plot = np.linspace(min(self.points), max(self.points), 300)
+        x_plot = np.linspace(min(self.points) - max(self.points) * 0.15, max(self.points) + max(self.points) * 0.15,
+                             300)  # coloco 10% a mais de pontos em cada direção para fazer o plot
 
         # Curva de calibração
         self.fig_ccs, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(self.points, self.avg_pts, 'o', label='Pontos adquiridos')
+        ax.plot(self.points, self.avg_pts, 'o', label='Pontos adquiridos', markersize=8, )
         ax.plot(x_plot, np.poly1d(self.curva_calib_estatica)(x_plot), '-', label='Curva')
-        ax.set_xlabel('Entrada')
-        ax.set_ylabel('Saída')
-        ax.set_title('Curva de calibração estática')
+        ax.set_xlabel('Entrada', fontsize=14)
+        ax.set_ylabel('Saída', fontsize=14)
+        ax.set_title('Curva de calibração estática', fontsize=14)
         ax.grid(True)
         ax.legend()
         self.fig_ccs.tight_layout()
@@ -129,23 +132,24 @@ class CaracteristicasEstaticas:
         # Sensibilidade
         self.fig_csens, ax1 = plt.subplots(figsize=(10, 5))
         ax1.plot(x_plot, np.poly1d(self.sensibilidade)(x_plot), '-', label='Sensibilidade')
-        ax1.set_xlabel('Entrada')
-        ax1.set_ylabel('Sensibilidade')
-        ax1.set_title('Curva de sensibilidade')
+        ax1.set_xlabel('Entrada', fontsize=14)
+        ax1.set_ylabel('Sensibilidade', fontsize=14)
+        ax1.set_title('Curva de sensibilidade', fontsize=14)
         ax1.grid(True)
         ax1.legend()
         self.fig_csens.tight_layout()
 
         # Histerese
         self.fig_hist, ax2 = plt.subplots(figsize=(10, 5))
-        ax2.plot(self.points, self.fwd_avg, 'o', label='Forward')
-        ax2.plot(self.points, self.bwd_avg, 'x', label='Backward')
-        ax2.set_xlabel('Entrada')
-        ax2.set_ylabel('Saída')
-        ax2.set_title('Análise de histerese')
+        ax2.plot(self.points, self.fwd_avg, 'o', label='Forward', markersize=8, )
+        ax2.plot(self.points, self.bwd_avg, 'x', label='Backward', markersize=8, )
+        ax2.set_xlabel('Entrada', fontsize=14)
+        ax2.set_ylabel('Saída', fontsize=14)
+        ax2.set_title('Análise de histerese', fontsize=14)
         ax2.grid(True)
         ax2.legend()
         self.fig_hist.tight_layout()
 
 
-car_est = CaracteristicasEstaticas(points=points, forward_dict=forward_dict, backward_dict=backward_dict)
+car_est = CaracteristicasEstaticas(points=points, forward_dict=forward_dict, backward_dict=backward_dict,
+                                   ordem_ajuste=3)
