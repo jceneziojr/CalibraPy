@@ -3,98 +3,149 @@ import matplotlib.pyplot as plt
 
 points = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-forward = {
-    0: [0.9426329170252411, 0.9140735604508224, 0.9774879519798982, 0.9493478946934051, 0.886929230090576],
-    1: [2.869214203023538, 2.896184166415508, 2.9218140912299044, 2.800725752333555, 3.1504778752018234],
-    2: [4.822955452438582, 4.887546414541777, 4.9048652432788415, 4.873378389245963, 5.038203338157492],
-    3: [7.149103849979171, 6.825105239249359, 6.993060379415681, 6.96129447707575, 6.975749094856521],
-    4: [8.947996278315578, 8.826005547704408, 8.95076488096912, 8.80443594777843, 9.077085565599132],
-    5: [10.929336176874676, 11.088085083842497, 11.074654971117738, 11.01503258886964, 10.973347831458444],
-    6: [13.190946991464946, 13.072872760153167, 12.842611909693012, 13.198458611242563, 13.09914791662066],
-    7: [15.041731710202095, 14.91666371253773, 15.168575282254396, 15.155644220181467, 15.011783303759893],
-    8: [17.096795270147272, 17.12383585362106, 16.914932033256708, 17.093914184912165, 17.094148111136978],
-    9: [18.979837174660325, 19.16777924995022, 18.994404717531687, 18.917460265300882, 19.06753949099367],
-    10: [21.10802491841826, 21.151828313670972, 20.980361825267174, 21.088619230697304, 20.814150456237456]
+forward_dict = {
+    0: [0.94, 0.91, 0.97, 0.94, 0.88],
+    1: [2.86, 2.89, 2.92, 2.80, 3.15],
+    2: [4.82, 4.88, 4.90, 4.87, 5.03],
+    3: [7.14, 6.82, 6.99, 6.96, 6.97],
+    4: [8.94, 8.82, 8.95, 8.80, 9.07],
+    5: [10.92, 11.08, 11.07, 11.01, 10.97],
+    6: [13.19, 13.07, 12.84, 13.19, 13.09],
+    7: [15.04, 14.91, 15.16, 15.15, 15.01],
+    8: [17.09, 17.12, 16.91, 17.09, 17.09],
+    9: [18.97, 19.16, 18.99, 18.91, 19.06],
+    10: [21.10, 21.15, 20.98, 21.08, 20.81]
 }
 
-backward = {
-    0: [0.9918122762492246, 1.063712733886522, 1.08040467177143, 1.172193677650502, 1.0263492421960017],
-    1: [3.0673036838728565, 3.1197561776437466, 3.195341032861686, 3.1082286579398968, 2.884810810759783],
-    2: [5.045822993309294, 5.12947981552949, 4.941005045019347, 5.00603173017078, 4.9840998784824935],
-    3: [7.049756051584605, 7.1197716437295595, 7.1655143335872, 7.173868781558097, 7.045418512762781],
-    4: [9.075042813316598, 8.951527457796457, 9.100966766158248, 9.10747459398595, 8.813502805358777],
-    5: [10.820058048454099, 11.105867255372596, 11.002025369876593, 11.063609403546192, 10.9257163060419],
-    6: [12.900559343292104, 12.917314308621139, 13.045257906620085, 13.064425362907324, 12.918828590525996],
-    7: [15.186391329528597, 14.93127151523333, 14.930308537333751, 15.027341182259581, 15.056007638148788],
-    8: [16.872403915923854, 17.0268337602181, 17.153453878534897, 17.100109125414214, 16.979762282363257],
-    9: [19.030953814244477, 18.882213903249728, 18.94810787988373, 19.004184868070237, 19.05837042357785],
-    10: [20.881625104808343, 21.12235995287735, 21.158802278864535, 21.02211193466849, 21.18054723685151]
+backward_dict = {
+    0: [0.99, 1.06, 1.08, 1.17, 1.02],
+    1: [3.06, 3.11, 3.19, 3.10, 2.88],
+    2: [5.04, 5.12, 4.94, 5.00, 4.98],
+    3: [7.04, 7.11, 7.16, 7.17, 7.04],
+    4: [9.07, 8.95, 9.10, 9.10, 8.81],
+    5: [10.82, 11.10, 11.00, 11.06, 10.92],
+    6: [12.90, 12.91, 13.04, 13.06, 12.91],
+    7: [15.18, 14.93, 14.93, 15.02, 15.05],
+    8: [16.87, 17.02, 17.15, 17.10, 16.97],
+    9: [19.03, 18.88, 18.94, 19.00, 19.05],
+    10: [20.88, 21.12, 21.15, 21.02, 21.18]
 }
-
-fwd_avg = []  # armazena o valor médio em cada ponto sentido fwd
-bwd_avg = []  # armazena o valor médio em cada ponto sentido bwd
-
-repetibilidade = {}  # repetibilidade em cada ponto
-
-for p in points:
-    fwd_avg.append(float(np.mean(forward[p])))
-    bwd_avg.append(float(np.mean(backward[p])))
-
-    repetibilidade[p] = float(
-        (np.max(forward[p] + backward[p]) - np.min(forward[p] + backward[p])) * 100 / (points[-1]))
-
-print(fwd_avg)
-print(bwd_avg)
-print(repetibilidade)
-
-avg_pts = [(f + b) / 2 for f, b in zip(fwd_avg, bwd_avg)]
-
-ordem_ajuste = 2
-curva_calib_estatica = np.polyfit(points, avg_pts, ordem_ajuste)
-sensibilidade = np.polyder(curva_calib_estatica)
-
-print(curva_calib_estatica)
-print(sensibilidade)
-
-valores_curva_sensibilidade = np.polyval(sensibilidade, points)
-
-print(valores_curva_sensibilidade)
-
-valores_curva_calib_estatica = np.polyval(curva_calib_estatica, points)
-diffs = np.abs(np.array(valores_curva_calib_estatica) - np.array(avg_pts))
-
-Dfm = np.max(diffs)  # máxima diferença entre o ajuste feito e os dados reais
-
-erro_ajuste = (Dfm / points[-1]) * 100  # erro de linearidade ou conformidade
-
-if ordem_ajuste == 1:
-    print(f"Erro de linearidade L(%) = {erro_ajuste:.2f}%")
-else:
-    print(f"Erro de conformidade C(%) = {erro_ajuste:.2f}%")
-
-diferencas_histerese = np.abs(np.array(fwd_avg) - np.array(bwd_avg))  # diferenças ponto a ponto entre os dois sentidos
-Hmax = np.max(diferencas_histerese)
-erro_histerese = (Hmax / points[-1]) * 100
-
-print(f"Erro de histerese H(%) = {erro_histerese:.2f}%")
-
-x_plot = np.linspace(min(points), max(points), 300)
-
-fig_ccs, ax = plt.subplots(figsize=(10, 5))
-
-ax.plot(points, avg_pts, 'o', label='Pontos médios')
-ax.plot(x_plot, np.poly1d(curva_calib_estatica)(x_plot), '-',
-        label='Curva de calibração')
-
-ax.set_xlabel('Entrada')
-ax.set_ylabel('Saída')
-ax.set_title('Curva de calibração estática')
-ax.grid(True)
-ax.legend()
-
-fig_ccs.tight_layout()
 
 
 class CaracteristicasEstaticas:
-    def __init__(self, points: list, fwd:dict, bwd):
-        pass
+
+    def __init__(self, points, forward_dict, backward_dict, ordem_ajuste=1):
+        self.points = points
+        self.forward_dict = forward_dict
+        self.backward_dict = backward_dict
+        self.ordem_ajuste = ordem_ajuste
+
+        # Cálculos
+        self._calcular_medias()
+        self._calcular_erro_aleatorio()
+        self._calcular_repetibilidade()
+        self._ajuste_polinomial()
+        self._avaliacao_do_ajuste()
+        self._calcular_histerese()
+        self._gerar_plots()
+
+    # ============================================================
+    def _calcular_medias(self):
+        """Médias forward / backward e pontos médios."""
+        self.fwd_avg = [float(np.mean(self.forward_dict[p])) for p in self.points]
+        self.bwd_avg = [float(np.mean(self.backward_dict[p])) for p in self.points]
+        self.avg_pts = [(f + b) / 2 for f, b in zip(self.fwd_avg, self.bwd_avg)]
+
+    # ============================================================
+    def _calcular_erro_aleatorio(self):
+        """Erro aleatório local e global."""
+        self.erro_aleatorio_local = {}
+        self.erro_aleatorio_global = 0
+
+        for idx, p in enumerate(self.points):
+
+            media_do_ponto = self.avg_pts[idx]
+            todas = self.forward_dict[p] + self.backward_dict[p]
+
+            EA_abs = np.abs([y - media_do_ponto for y in todas])
+            max_local = float(np.max(EA_abs))
+            self.erro_aleatorio_local[p] = max_local
+
+            if max_local > self.erro_aleatorio_global:
+                self.erro_aleatorio_global = max_local
+
+    # ============================================================
+    def _calcular_repetibilidade(self):
+        """Diferença max-min % para cada ponto."""
+        repetibilidade = {}
+
+        for p in self.points:
+            repetibilidade[p] = float(
+                (np.max(self.forward_dict[p] + self.backward_dict[p]) -
+                 np.min(self.forward_dict[p] + self.backward_dict[p])) * 100 / self.points[-1]
+            )
+
+        self.repetibilidade = repetibilidade
+        self.repetibilidade_max = max(repetibilidade.values())
+
+    # ============================================================
+    def _ajuste_polinomial(self):
+        """Ajuste polinomial e sensibilidade."""
+        self.curva_calib_estatica = np.polyfit(self.points, self.avg_pts, self.ordem_ajuste)
+        self.sensibilidade = np.polyder(self.curva_calib_estatica)
+
+    # ============================================================
+    def _avaliacao_do_ajuste(self):
+        """Erro de linearidade ou conformidade."""
+        valores = np.polyval(self.curva_calib_estatica, self.points)
+        diffs = np.abs(np.array(valores) - np.array(self.avg_pts))
+
+        Dfm = np.max(diffs)
+        self.erro_ajuste = (Dfm / self.points[-1]) * 100
+
+    # ============================================================
+    def _calcular_histerese(self):
+        """Histerese: diferença entre forward e backward."""
+        diferencas = np.abs(np.array(self.fwd_avg) - np.array(self.bwd_avg))
+        Hmax = np.max(diferencas)
+        self.erro_histerese = (Hmax / self.points[-1]) * 100
+
+    # ============================================================
+    def _gerar_plots(self):
+        """Gera as três figuras: curva, sensibilidade e histerese."""
+        x_plot = np.linspace(min(self.points), max(self.points), 300)
+
+        # Curva de calibração
+        self.fig_ccs, ax = plt.subplots(figsize=(10, 5))
+        ax.plot(self.points, self.avg_pts, 'o', label='Pontos adquiridos')
+        ax.plot(x_plot, np.poly1d(self.curva_calib_estatica)(x_plot), '-', label='Curva')
+        ax.set_xlabel('Entrada')
+        ax.set_ylabel('Saída')
+        ax.set_title('Curva de calibração estática')
+        ax.grid(True)
+        ax.legend()
+        self.fig_ccs.tight_layout()
+
+        # Sensibilidade
+        self.fig_csens, ax1 = plt.subplots(figsize=(10, 5))
+        ax1.plot(x_plot, np.poly1d(self.sensibilidade)(x_plot), '-', label='Sensibilidade')
+        ax1.set_xlabel('Entrada')
+        ax1.set_ylabel('Sensibilidade')
+        ax1.set_title('Curva de sensibilidade')
+        ax1.grid(True)
+        ax1.legend()
+        self.fig_csens.tight_layout()
+
+        # Histerese
+        self.fig_hist, ax2 = plt.subplots(figsize=(10, 5))
+        ax2.plot(self.points, self.fwd_avg, 'o', label='Forward')
+        ax2.plot(self.points, self.bwd_avg, 'x', label='Backward')
+        ax2.set_xlabel('Entrada')
+        ax2.set_ylabel('Saída')
+        ax2.set_title('Análise de histerese')
+        ax2.grid(True)
+        ax2.legend()
+        self.fig_hist.tight_layout()
+
+
+car_est = CaracteristicasEstaticas(points=points, forward_dict=forward_dict, backward_dict=backward_dict)
