@@ -152,4 +152,4 @@ class CaracteristicasEstaticas:
 
 
 car_est = CaracteristicasEstaticas(points=points, forward_dict=forward_dict, backward_dict=backward_dict,
-                                   ordem_ajuste=3)
+                                   ordem_ajuste=1)

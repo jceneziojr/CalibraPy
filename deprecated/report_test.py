@@ -1,3 +1,5 @@
+from typing import Union
+
 import pandas as pd
 import os
 from datetime import datetime
@@ -17,7 +19,12 @@ import shutil
 import re
 import io
 
-from report_codes.static import car_est
+from report_codes.static import car_est, CaracteristicasEstaticas
+from report_codes.id_0_ordem import OrdemZero, modelo_0ordem
+from report_codes.id_1_ordem import PrimeiraOrdem, modelo_1ordem
+from report_codes.id_2_ordem_subam import SundaresanSubamortecido, modelo_sub
+from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido, modelo_sob
+
 import matplotlib.pyplot as plt
 
 
@@ -37,7 +44,7 @@ def latex_to_rl_image(eq, width=None, height=None):
     return fig_to_rl_image(fig, width=width, height=height)
 
 
-def polyfit_to_latex(coeffs, var="x"):
+def polyfit_to_latex(coeffs, var="x", unidade=None):
     termos = []
     grau = len(coeffs) - 1
 
@@ -46,13 +53,9 @@ def polyfit_to_latex(coeffs, var="x"):
         if abs(c) < 1e-10:
             continue
 
-        # Determinar sinal
         sinal = "+" if c >= 0 else "-"
-
-        # Valor absoluto para não duplicar o sinal
         c_abs = abs(c)
 
-        # Formatação do termo
         if pot > 1:
             termo = f"{c_abs:.4f}{var}^{{{pot}}}"
         elif pot == 1:
@@ -62,35 +65,43 @@ def polyfit_to_latex(coeffs, var="x"):
 
         termos.append((sinal, termo))
 
-    # Montar string final
     if not termos:
-        return "y = 0"
+        equacao = "y = 0"
+    else:
+        sinal1, termo1 = termos[0]
+        equacao = f"y = {'-' if sinal1 == '-' else ''}{termo1}"
+        for sinal, termo in termos[1:]:
+            equacao += f" {sinal} {termo}"
 
-    # Primeiro termo não deve ter "+" na frente
-    sinal1, termo1 = termos[0]
-    equacao = f"y = {'-' if sinal1 == '-' else ''}{termo1}"
-
-    # Restante dos termos
-    for sinal, termo in termos[1:]:
-        equacao += f" {sinal} {termo}"
+    if unidade is not None:
+        equacao += f"\\ \\left[\\frac{{V}}{{{unidade}}}\\right]"
 
     return equacao
+
+
+def tf_to_latex(ordem, *params):
+    if ordem == 0:
+        K = params[0]
+        return fr"G(s) = {K:.4f}"
+
+    elif ordem == 1:
+        K, tau = params
+        return fr"G(s) = \frac{{{K:.4f}}}{{{tau:.4f}s + 1}}"
+
+    elif ordem == 2:
+        K, tau_d, xi, wn = params
+        num = fr"{K:.4f} e^{{-{tau_d:.4f}s}}"
+        den = fr"{wn ** 2:.4f} + {2 * xi * wn:.4f}s + s^2"
+        return fr"G(s) = \frac{{{num}}}{{{den}}}"
 
 
 def gerar_relatorio_calibracao(
         arquivo_pdf: str,
         sensor_name: str,
         resp_name: str,
-        figure_ccs,
-        pol_eq_ccs,
-        figure_csens,
-        pol_eq_csens,
-        ordem_aj,
-        erro_aj,
-        erro_hist,
-        repet,
-        erro_al,
-        figure_hist
+        class_sta: CaracteristicasEstaticas,
+        class_dyn: Union[OrdemZero, PrimeiraOrdem, SundaresanSobreamortecido, SundaresanSubamortecido],
+        unidade: str
 ):
     doc = SimpleDocTemplate(
         arquivo_pdf,
@@ -165,32 +176,32 @@ def gerar_relatorio_calibracao(
 
     story.append(Paragraph("Características estáticas", estilo_titulos_sub))
 
-    img_ccs = fig_to_rl_image(figure_ccs, width=400, height=200)  # imagem curva de calibração estática
+    img_ccs = fig_to_rl_image(class_sta.fig_ccs, width=400, height=200)  # imagem curva de calibração estática
     img_ccs.hAlign = "CENTER"
     story.append(img_ccs)
 
     story.append(Spacer(1, 10))
     story.append(Paragraph("Equação da curva de calibração estática:", estilo_secao))
 
-    eq_ccs = polyfit_to_latex(pol_eq_ccs)
+    eq_ccs = polyfit_to_latex(class_sta.curva_calib_estatica)
 
-    img_eq_ccs = latex_to_rl_image(eq_ccs, width=120 + (ordem_aj - 1) * 20, height=40)
+    img_eq_ccs = latex_to_rl_image(eq_ccs, width=120 + (class_sta.ordem_ajuste - 1) * 20, height=40)
 
     img_eq_ccs.hAlign = "CENTER"
     story.append(img_eq_ccs)
 
     story.append(Spacer(1, 20))
 
-    img_csens = fig_to_rl_image(figure_csens, width=400, height=200)  # imagem curva de sensibilidade
+    img_csens = fig_to_rl_image(class_sta.fig_csens, width=400, height=200)  # imagem curva de sensibilidade
     img_csens.hAlign = "CENTER"
     story.append(img_csens)
 
     story.append(Spacer(1, 10))
     story.append(Paragraph("Equação da curva de sensibilidade:", estilo_secao))
 
-    eq_csens = polyfit_to_latex(pol_eq_csens)
+    eq_csens = polyfit_to_latex(class_sta.sensibilidade, unidade=unidade)
 
-    img_eq_csens = latex_to_rl_image(eq_csens, width=120 + (ordem_aj - 1) * 20, height=40)
+    img_eq_csens = latex_to_rl_image(eq_csens, width=120 + (class_sta.ordem_ajuste - 1) * 20, height=40)
 
     img_eq_csens.hAlign = "CENTER"
     story.append(img_eq_csens)
@@ -200,16 +211,17 @@ def gerar_relatorio_calibracao(
     # Linhas da tabela
     # Monta as linhas
     linhas = [
-        ["Erro Aleatório EA", f"{erro_al:.2f}"],
-        ["Repetibilidade (%)", f"{repet:.2f}%"],
+        ["Erro Aleatório - EA", f"{class_sta.erro_aleatorio_global:.2f} [{unidade}]"],
+        ["Repetibilidade (%)", f"{class_sta.repetibilidade_max:.2f}%"],
     ]
 
-    if ordem_aj == 1:
-        linhas.append(["Erro de linearidade L (%)", f"{erro_aj:.2f}%"])
+    if class_sta.ordem_ajuste == 1:
+        linhas.append(["Erro de linearidade - L (%)", f"{class_sta.erro_ajuste:.2f}%"])
     else:
-        linhas.append(["Erro de conformidade C (%)", f"{erro_aj:.2f}%"])
+        linhas.append(["Erro de conformidade - C (%)", f"{class_sta.erro_ajuste:.2f}%"])
 
-    linhas.append(["Erro de histerese H (%)", f"{erro_hist:.2f}%"])
+    linhas.append(["Erro de histerese - H (%)", f"{class_sta.erro_histerese:.2f}%"])
+    linhas.append(["Fundo de escala - FES", f"{class_sta.points[-1]:.2f} [{unidade}]"])
 
     # Cria a tabela
     tabela = Table(
@@ -231,7 +243,7 @@ def gerar_relatorio_calibracao(
     story.append(tabela)
 
     story.append(Spacer(1, 20))
-    img_hist = fig_to_rl_image(figure_hist, width=400, height=200)  # imagem histerese
+    img_hist = fig_to_rl_image(class_sta.fig_hist, width=400, height=200)  # imagem histerese
     img_hist.hAlign = "CENTER"
     story.append(img_hist)
 
@@ -240,6 +252,83 @@ def gerar_relatorio_calibracao(
     # -------------------------------------------------------
     # CARAC DINÂMICAS
     # -------------------------------------------------------
+
+    story.append(Paragraph("Características dinâmicas", estilo_titulos_sub))
+
+    # tf_to_latex
+
+    if class_dyn.TIPO_AJUSTE == "0a_ordem":
+        story.append(Paragraph("Modelo de ordem 0:", estilo_secao))
+
+        eq_tf = tf_to_latex(0, class_dyn.K)
+        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
+        story.append(img_tf)
+
+        story.append(Spacer(1, 10))
+
+        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
+        img_dyn.hAlign = "CENTER"
+        story.append(img_dyn)
+
+        linhas_dyn = [["Ganho", f"{class_dyn.K:.4f}"]]
+
+    elif class_dyn.TIPO_AJUSTE == "1a_ordem":
+        story.append(Paragraph("Modelo de primeira ordem:", estilo_secao))
+
+        eq_tf = tf_to_latex(1, class_dyn.K, class_dyn.tau, )
+        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
+        story.append(img_tf)
+
+        story.append(Spacer(1, 10))
+
+        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
+        img_dyn.hAlign = "CENTER"
+        story.append(img_dyn)
+
+        linhas_dyn = [
+            ["Ganho", f"{class_dyn.K:.4f}"],
+            ["Constante de tempo", f"{class_dyn.tau:.4f}"]
+        ]
+
+    elif class_dyn.TIPO_AJUSTE == "2a_ordem_subamortecido":
+        story.append(Paragraph("Modelo de segunda ordem subamortecido:", estilo_secao))
+
+        eq_tf = tf_to_latex(2, class_dyn.K, class_dyn.tau_d, class_dyn.xi, class_dyn.wn)
+        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
+        story.append(img_tf)
+
+        story.append(Spacer(1, 10))
+
+        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
+        img_dyn.hAlign = "CENTER"
+        story.append(img_dyn)
+
+        linhas_dyn = [
+            ["Ganho", f"{class_dyn.K:.4f}"],
+            ["Atraso puro de tempo", f"{class_dyn.tau_d:.4f}"],
+            ["Coeficiente de amortecimento", f"{class_dyn.xi:.4f}"],
+            ["Frequência natural", f"{class_dyn.wn:.4f}"],
+        ]
+
+    story.append(Spacer(1, 10))
+
+    story.append(Paragraph("Parâmetros do modelo dinâmico", estilo_secao))
+
+    tabela_dyn = Table(
+        linhas_dyn,
+        colWidths=[9 * cm, 4 * cm],  # ajuste se quiser
+    )
+    tabela_dyn.setStyle(TableStyle([
+        ('FONTNAME', (0, 0), (-1, -1), 'Courier'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('BOX', (0, 0), (-1, -1), 1.5, colors.black),
+        ('INNERGRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+    ]))
+
+    story.append(tabela_dyn)
 
     def rodape(canvas, doc):
         canvas.setFont("Courier", 10)
@@ -265,14 +354,7 @@ if __name__ == "__main__":
         arquivo_pdf="relatorio_calibracao.pdf",
         sensor_name="Termopar XYZ-200",
         resp_name="Júlio César",
-        pol_eq_ccs=car_est.curva_calib_estatica,
-        figure_ccs=car_est.fig_ccs,
-        figure_csens=car_est.fig_csens,
-        pol_eq_csens=car_est.sensibilidade,
-        ordem_aj=car_est.ordem_ajuste,
-        erro_aj=car_est.erro_ajuste,
-        erro_hist=car_est.erro_histerese,
-        repet=car_est.repetibilidade_max,
-        erro_al=car_est.erro_aleatorio_global,
-        figure_hist=car_est.fig_hist
+        class_sta=car_est,
+        class_dyn=modelo_sub,
+        unidade="pos"
     )
