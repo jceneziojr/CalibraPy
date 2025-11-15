@@ -166,8 +166,8 @@ class SundaresanSubamortecido:
     # ----------------------------------------------------------------------------------------
     def _gerar_plot(self):
         self.fig_dyn, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(self.t, self.y, 'r', label="Dados medidos")
-        ax.plot(self.t, self.modelo, 'b', label="Modelo subamortecido")
+        ax.plot(self.t, self.y, 'r', label="Dados")
+        ax.plot(self.t, self.modelo, 'b', label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
         ax.set_ylabel("Amplitude", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)
@@ -198,4 +198,3 @@ y_noisy = y_clean + noise + 3 * np.ones_like(y_clean)
 
 # Aplicação da classe
 modelo_sub = SundaresanSubamortecido(t, y_noisy, amplitude_degrau=1, dt=dt)
-

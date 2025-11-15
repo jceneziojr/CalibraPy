@@ -179,15 +179,15 @@ class SundaresanSobreamortecido:
 
     # =====================================================================
     def _gerar_plot(self):
-        self.fig_din, ax = plt.subplots(figsize=(10, 5))
+        self.fig_dyn, ax = plt.subplots(figsize=(10, 5))
         ax.plot(self.t, self.y, "r", label="Dados")
-        ax.plot(self.t, self.modelo, "b", label="Modelo Sundaresan")
+        ax.plot(self.t, self.modelo, "b", label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
         ax.set_ylabel("Amplitude", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)
         ax.grid(True)
         ax.legend()
-        self.fig_din.tight_layout()
+        self.fig_dyn.tight_layout()
 
 
 K_real = 2.0

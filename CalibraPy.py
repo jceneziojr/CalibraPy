@@ -3,7 +3,6 @@
 # tem algum bug, que na segunda execução o ponto é aquisitado todas as vezes. tem que checar oq acontece
 #   mas por enquanto, fechar e abrir pra cada
 
-
 import os
 import sys
 import time
@@ -11,7 +10,7 @@ import serial
 import serial.tools.list_ports
 import numpy as np
 import matplotlib as mpl
-import matplotlib.pyplot as plt
+from report_codes.static import CaracteristicasEstaticas
 
 from uis.ui_CalibraPy import Ui_CalibraPy
 
@@ -64,6 +63,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.first_point_done = False
         self.din_x = list()
         self.din_teste = None
+        self.dynamic_report_done = False
 
         # arrumando texto
         font = QFont()
@@ -118,7 +118,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         # print(f"num pontos: {self.acquisition_points}")
         # print(f"pontos: {self.pontos}")
-        self.start_acq.setEnabled(True)
+        if len(self.pontos) > 1:
+            self.start_acq.setEnabled(True)
         self.finish_stat_b.setEnabled(False)
         self.points_plot.clear()
         self.points_plot.setXRange(self.pontos[0], self.pontos[-1], padding=0.02)
@@ -158,23 +159,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
     def finish_din_test_handle(self):
         self.redo_test_b.setEnabled(False)
         self.config_acq_b_2.setEnabled(False)
-        if self.dados_plot_din and self.din_x:
-            print(len(self.din_x))
-            print("DADOS DE TESTE DINÂMICO PRONTOS PARA TRATAMENTO")
-            dinamica = self.dinamica_combo.currentText()
-            print(f"ROTINA: {dinamica}")
-            diffs = np.diff(self.din_x)
 
-            step = np.mean(diffs)
-            max_error = np.max(np.abs(diffs - step))
-
-            print(f"Passo médio: {step}")
-            print(f"Erro máximo: {max_error}")
-
-            if max_error < 1e-9:
-                print("➡️ O vetor é uniformemente espaçado.")
-            else:
-                print("⚠️ O espaçamento NÃO é uniforme.")
+        if hasattr(self, "din_teste"):
+            self.din_teste.stop()
+            # aguarda a threadpool processar(não sei se realmente precisa)
+            self.din_teste.threadpool.waitForDone(2000)  # timeout em ms
+        # if self.dados_plot_din and self.din_x:
+        #     print(len(self.din_x))
+        #     print("DADOS DE TESTE DINÂMICO PRONTOS PARA TRATAMENTO")
+        #     dinamica = self.dinamica_combo.currentText()
+        #     print(f"ROTINA: {dinamica}")
+        #     diffs = np.diff(self.din_x)
+        #
+        #     step = np.mean(diffs)
+        #     max_error = np.max(np.abs(diffs - step))
+        #
+        #     print(f"Passo médio: {step}")
+        #     print(f"Erro máximo: {max_error}")
+        #
+        #     if max_error < 1e-9:
+        #         print("➡️ O vetor é uniformemente espaçado.")
+        #     else:
+        #         print("⚠️ O espaçamento NÃO é uniforme.")
 
     def open_help_s(self):
         dialog = StaticHelp()
@@ -188,89 +194,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.din_plot = self.test_plot.plot()
         self.dados_plot_din = list()
 
-        self.start_acq_2.setEnabled(False)
-        self._start_updatable_plot()
-
-        self.dt = 0.001
-
         if self.din_teste:
             self.din_teste = DynamicTest(self.serial, _reset_buffer=False)
         else:
             self.din_teste = DynamicTest(self.serial)
-
-        loop_start = time.time()
-
-        self._running = True
-
-        while self._running:
-            st = time.time()
-
-            raw = self.serial.read(14)
-            parts = raw.split()
-            elapsed = st - loop_start
-            if elapsed >= self.tempo_sessao:
-                self._running = False
-
-            if len(parts) >= 2:
-                try:
-                    value = int(parts[-2].decode("UTF-8")) * 0.00488
-                    self.din_plot_handle(elapsed, value)
-                    self._update_plot()
-
-                except Exception as e:
-                    print("erro na leitura serial:", e)
-
-            # et = time.time()
-            # print(et - st)
-            # delay = max(0, self.dt + (st - et))
-            # if delay > 0:
-            #     time.sleep(delay)
-
-        # self.din_teste.data_ready.connect(self.din_plot_handle)
-        # self.din_teste.session_finished.connect(self.din_session_finish_handle)
-        self.din_session_finish_handle()
-
-        # self.din_teste.start(self.tempo_sessao, dt=self.dt)
-
-    def _start_updatable_plot(self):
-        """Method to start updatable plot"""
-
-        # Changing Matplotlib backend
-        mpl.use("Qt5Agg")
-
-        # create the figure and axes objects
-        self.fig, self.ax = plt.subplots()
-        self.fig._label = "iter_plot"  # Defining label
-
-        # Iteractive plot on
-        plt.ion()
-
-        # Title and labels and plot creation
-        # plt.title(self.title)
-        plt.xlabel("Time (samples)")
-        plt.ylabel("Voltage")
-        plt.grid()
-        self.line = self.ax.plot([], [])
-        plt.show()
-
-    def _update_plot(self):
-        """Method to update plot already started using _start_updatable_plot
-        using x_value and y_value as new data"""
-
-        self.ax.clear()
-        # plt.title(self.title)
-        plt.xlabel("Time (samples)")
-        plt.ylabel("Voltage")
-        plt.grid()
-
-        self.ax.plot(self.din_x, self.dados_plot_din, "o-")
-        # plt.legend(self.legend)
-        self.fig.canvas.draw()
-        self.fig.canvas.flush_events()
+        self.din_teste.data_ready.connect(self.din_plot_handle)
+        self.din_teste.session_finished.connect(self.din_session_finish_handle)
+        self.dt = 0.01
+        self.din_teste.start(self.tempo_sessao, dt=self.dt)
+        self.start_acq_2.setEnabled(False)
 
     def din_plot_handle(self, t, y):
         self.dados_plot_din.append(y)
         self.din_x.append(t)
+
+        self.din_plot.setData(self.din_x, self.dados_plot_din)
 
     def din_session_finish_handle(self):
         self.redo_test_b.setEnabled(True)
@@ -306,9 +244,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         index_arduino = next(
             (i for i, desc in enumerate(self.com_ports)
-             if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
+             if "arduino" in desc.lower()),  # TIRAR COM10 NO FINAL
             -1
         )
+
+        # index_arduino = next(
+        #     (i for i, desc in enumerate(self.com_ports)
+        #      if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
+        #     -1
+        # )
 
         if index_arduino != -1:
             self.device_combo.setCurrentIndex(index_arduino)
@@ -372,7 +316,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def handle_samples_ready(self, samples: list):
         # método pra cuidar dos dados coletados
-        # print(f"amostras recebidas pela thread: {samples}")
         self.handle_static_acq_process(samples)
         self.redo_point_b.setEnabled(True)
         if not self.acq_index == len(self.sequence_points) - 1:
@@ -423,101 +366,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             # aguarda a threadpool processar(não sei se realmente precisa)
             self.get_signal.threadpool.waitForDone(2000)  # timeout em ms
 
-        if hasattr(self, "serial") and self.serial.is_open:
-            try:
-                self.serial.close()
-            except Exception:
-                pass
-
-        self.config_acq_b.setEnabled(True)
+        self.config_acq_b.setEnabled(False)
         self.redo_point_b.setEnabled(False)
         self.tab_2.setEnabled(True)
         self.signal_plot.clear()
 
     def static_info(self):
-        repetibilidade = {}
 
-        for p in self.pontos:
-            repetibilidade[p] = float(
-                (np.max(self.forward_dict[p] + self.backward_dict[p]) - np.min(
-                    self.forward_dict[p] + self.backward_dict[p])) * 100 / (self.pontos[-1]))
-
-        for p in self.pontos:
-            print(f"Repetibilidade em {p} = {repetibilidade[p]:.2f}%")
-
-        ordem_ajuste = self.ajuste_combo.currentIndex() + 1
-
-        curva_calib_estatica = np.polyfit(self.pontos, self.fwd_avg, ordem_ajuste)
-        sensibilidade = np.polyder(curva_calib_estatica)
-
-        equacao = "y = " + " + ".join(
-            [f"{curva_calib_estatica[i]:.4f}x^{ordem_ajuste - i}" if ordem_ajuste - i > 1 else
-             (f"{curva_calib_estatica[i]:.4f}x" if ordem_ajuste - i == 1 else f"{curva_calib_estatica[i]:.4f}")
-             for i in range(len(curva_calib_estatica))]
-        )
-
-        print(f"Ordem do ajuste: {ordem_ajuste}")
-        print(f"Equação: {equacao}")
-        print(f"Sensibilidade curva: {sensibilidade}")
-
-        pontos_plot = np.linspace(self.pontos[0], self.pontos[-1], 100)
-
-        valores_curva_sensibilidade = np.polyval(sensibilidade, pontos_plot)
-        valores_curva_calib_estatica = np.polyval(curva_calib_estatica, pontos_plot)
-
-        valores_curva_calib_estatica_assist = np.polyval(curva_calib_estatica, self.pontos)
-
-        diffs = np.abs(np.array(valores_curva_calib_estatica_assist) - np.array(self.fwd_avg))
-
-        Dfm = np.max(diffs)  # máxima diferença entre o ajuste feito e os dados reais
-
-        erro_ajuste = (Dfm / self.pontos[-1]) * 100  # erro de linearidade ou conformidade
-
-        if ordem_ajuste == 1:
-            print(f"Erro de linearidade L(%) = {erro_ajuste:.2f}%")
-        else:
-            print(f"Erro de conformidade C(%) = {erro_ajuste:.2f}%")
-
-        diferencas_histerese = np.abs(
-            np.array(self.fwd_avg) - np.array(self.bwd_avg))  # diferenças ponto a ponto entre os dois sentidos
-        Hmax = np.max(diferencas_histerese)
-        erro_histerese = (Hmax / self.pontos[-1]) * 100
-
-        print(f"Erro de histerese H(%) = {erro_histerese:.2f}%")
-
-        fig, ax1 = plt.subplots(figsize=(10, 5))
-
-        # Curva de calibração - apenas dados medidos como pontos
-        ax1.plot(self.pontos, self.fwd_avg, 'o', label='Dados indo')
-        ax1.plot(self.pontos, self.bwd_avg, 'x', label='Dados voltando')
-
-        # Ajuste polinomial como linha contínua
-        ax1.plot(pontos_plot, valores_curva_calib_estatica, '-', label='Curva de calibração estática', linewidth=2)
-
-        ax1.set_xlabel('Pontos')
-        ax1.set_ylabel('Curva de Calibração', color='blue')
-        ax1.tick_params(axis='y', labelcolor='blue')
-        ax1.grid(True)
-
-        # Curva de sensibilidade como linha contínua, sem marcadores
-        ax2 = ax1.twinx()
-        ax2.plot(pontos_plot, valores_curva_sensibilidade, '-', color='orange', label='Sensibilidade', linewidth=2)
-        ax2.set_ylabel('Sensibilidade', color='orange')
-        ax2.tick_params(axis='y', labelcolor='orange')
-
-        # Legenda combinada
-        lines_1, labels_1 = ax1.get_legend_handles_labels()
-        lines_2, labels_2 = ax2.get_legend_handles_labels()
-        ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper left')
-
-        plt.title('Curva de Calibração e Sensibilidade')
-        plt.tight_layout()
-        plt.show()
+        car_est = CaracteristicasEstaticas(self.pontos, self.forward_dict, self.backward_dict,
+                                           self.ajuste_combo.currentIndex() + 1)
+        car_est.fig_ccs.show()
+        car_est.fig_csens.show()
+        car_est.fig_hist.show()
 
         self.static_report_done = True
 
     def exit_handle(self):
         # para a thread do GetSignal e espera terminar
+        if self.din_teste._running:
+            self.din_teste.stop()
+
         if hasattr(self, "get_signal"):
             self.get_signal.stop()
             # aguarda a threadpool processar(não sei se realmente precisa)

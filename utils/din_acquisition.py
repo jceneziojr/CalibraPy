@@ -1,12 +1,12 @@
 import time
-from PySide6.QtCore import QObject, Signal, QThreadPool
+from PySide6.QtCore import QObject, Signal, QThreadPool, QThread
 from .thread_related import Worker
 import shiboken6
 
 
 class DynamicTest(QObject):
     # Agora emite (tempo, valor)
-    data_ready = Signal(float, float)  
+    data_ready = Signal(float, float)
     session_finished = Signal(list)  # emite toda a curva no final
 
     def __init__(self, serial, _reset_buffer=True):
@@ -38,7 +38,7 @@ class DynamicTest(QObject):
                 self.serial.reset_input_buffer()
             except Exception:
                 pass
-        
+
         start_time = time.monotonic()
         while self._running:
             if not shiboken6.isValid(self):
@@ -52,28 +52,45 @@ class DynamicTest(QObject):
 
             loop_start = time.monotonic()
 
+            # try:
+            #     raw = self.serial.read(14)
+            #     parts = raw.split()
+            #     if len(parts) >= 2:
+            #         try:
+            #             value = int(parts[-2].decode("UTF-8")) * 0.00488
+            #             self.collected_data.append(value)
+            #             self.collected_time.append(elapsed)
+            #             # envia tempo e valor
+            #             self.data_ready.emit(elapsed, value)
+            #         except Exception:
+            #             pass
+            # except Exception as e:
+            #     print("erro na leitura serial:", e)
+
             try:
-                raw = self.serial.read(14)
-                parts = raw.split()
-                if len(parts) >= 2:
-                    try:
-                        value = int(parts[-2].decode("UTF-8")) * 0.00488
-                        self.collected_data.append(value)
-                        self.collected_time.append(elapsed)
-                        # envia tempo e valor
-                        self.data_ready.emit(elapsed, value)
-                        print(value)
-                    except Exception:
-                        pass
+                raw = self.serial.read_until(b"\n")
+                line = raw.decode("utf-8", errors="ignore").strip()
+
+                if line:
+                    value = float(line) * 0.00488
+
+                    self.collected_data.append(value)
+                    self.collected_time.append(elapsed)
+
+                    # envia tempo e valor
+                    self.data_ready.emit(elapsed, value)
+
             except Exception as e:
                 print("erro na leitura serial:", e)
 
             loop_elapsed = time.monotonic() - loop_start
             delay = max(0, self.dt - loop_elapsed)
             if delay > 0:
-                time.sleep(delay)
+                # time.sleep(delay)
+                QThread.msleep(int(delay * 1000))
 
         self.session_finished.emit(list(self.collected_data))
+        self.stop()
 
     def thread(self, func_to_pass, *args, **kwargs):
         worker = Worker(func_to_pass, *args, **kwargs)

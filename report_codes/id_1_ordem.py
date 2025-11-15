@@ -66,8 +66,8 @@ class PrimeiraOrdem:
     def _gerar_plot(self):
         """Gera figura para relatório (comparação dado vs modelo)."""
         self.fig_dyn, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(self.t, self.y, 'r', label="Dados medidos")
-        ax.plot(self.t, self.modelo, 'b', label="Modelo 1ª ordem")
+        ax.plot(self.t, self.y, 'r', label="Dados")
+        ax.plot(self.t, self.modelo, 'b', label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
         ax.set_ylabel("Amplitude", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)

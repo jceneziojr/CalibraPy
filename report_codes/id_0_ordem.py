@@ -22,7 +22,6 @@ class OrdemZero:
         self.modelo = None
         self.erro_mse = None
 
-        # processamento automático → igual ao padrão da classe estática
         self._ajustar_modelo()
         self._avaliar_erro()
         self._gerar_plot()
@@ -32,7 +31,7 @@ class OrdemZero:
         """Ajuste simples de modelo 0ª ordem."""
         tam = len(self.y)
 
-        # valor final da resposta → média dos últimos 5%
+        # valor final da resposta -- média dos últimos 5%
         self.y_inf = float(np.mean(self.y[-int(tam * 0.05):]))
 
         # ganho K
@@ -50,8 +49,8 @@ class OrdemZero:
     def _gerar_plot(self):
         """Gera figura padrão para relatório (comparação dado vs modelo)."""
         self.fig_dyn, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(self.t, self.y, 'r', label="Dados medidos")
-        ax.plot(self.t, self.modelo, 'b', label="Modelo 0ª ordem")
+        ax.plot(self.t, self.y, 'r', label="Dados")
+        ax.plot(self.t, self.modelo, 'b', label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
         ax.set_ylabel("Amplitude", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)

@@ -24,8 +24,62 @@ from report_codes.id_0_ordem import OrdemZero, modelo_0ordem
 from report_codes.id_1_ordem import PrimeiraOrdem, modelo_1ordem
 from report_codes.id_2_ordem_subam import SundaresanSubamortecido, modelo_sub
 from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido, modelo_sob
+from report_codes.id_2_ordem_critico import SundaresanCriticamenteAmortecido, modelo_crit
 
 import matplotlib.pyplot as plt
+
+# --- Configurações por tipo de ajuste ---
+config = {
+    "0a_ordem": {
+        "titulo": "Modelo de ordem 0:",
+        "latex_args": lambda c: (0, c.K),
+        "linhas": lambda c: [
+            ["Ganho", f"{c.K:.4f}"],
+        ],
+    },
+
+    "1a_ordem": {
+        "titulo": "Modelo de primeira ordem:",
+        "latex_args": lambda c: (1, c.K, c.tau),
+        "linhas": lambda c: [
+            ["Ganho", f"{c.K:.4f}"],
+            ["Constante de tempo", f"{c.tau:.4f}"],
+        ],
+    },
+
+    "2a_ordem_subamortecido": {
+        "titulo": "Modelo de segunda ordem subamortecido:",
+        "latex_args": lambda c: (2, c.K, c.tau_d, c.xi, c.wn),
+        "linhas": lambda c: [
+            ["Ganho", f"{c.K:.4f}"],
+            ["Atraso puro de tempo", f"{c.tau_d:.4f}"],
+            ["Coeficiente de amortecimento", f"{c.xi:.4f}"],
+            ["Frequência natural", f"{c.wn:.4f}"],
+        ],
+    },
+
+    "2a_ordem_sobreamortecido": {
+        "titulo": "Modelo de segunda ordem sobreamortecido:",
+        "latex_args": lambda c: (2, c.K, c.tau_d, c.xi, c.wn),
+        "linhas": lambda c: [
+            ["Ganho", f"{c.K:.4f}"],
+            ["Atraso puro de tempo", f"{c.tau_d:.4f}"],
+            ["Coeficiente de amortecimento", f"{c.xi:.4f}"],
+            ["Frequência natural", f"{c.wn:.4f}"],
+        ],
+    },
+
+    "2a_ordem_critico": {
+        "titulo": "Modelo de segunda ordem criticamente amortecido:",
+        "latex_args": lambda c: (2, c.K, c.tau_d, c.xi, c.wn),
+        "linhas": lambda c: [
+            ["Ganho", f"{c.K:.4f}"],
+            ["Atraso puro de tempo", f"{c.tau_d:.4f}"],
+            ["Coeficiente de amortecimento", f"{c.xi:.4f}"],
+            ["Frequência natural", f"{c.wn:.4f}"],
+        ],
+    },
+}
 
 
 def fig_to_rl_image(fig, width=None, height=None):
@@ -91,7 +145,7 @@ def tf_to_latex(ordem, *params):
     elif ordem == 2:
         K, tau_d, xi, wn = params
         num = fr"{K:.4f} e^{{-{tau_d:.4f}s}}"
-        den = fr"{wn ** 2:.4f} + {2 * xi * wn:.4f}s + s^2"
+        den = fr"s^2 + {2 * xi * wn:.4f}s + {wn ** 2:.4f}"
         return fr"G(s) = \frac{{{num}}}{{{den}}}"
 
 
@@ -100,7 +154,8 @@ def gerar_relatorio_calibracao(
         sensor_name: str,
         resp_name: str,
         class_sta: CaracteristicasEstaticas,
-        class_dyn: Union[OrdemZero, PrimeiraOrdem, SundaresanSobreamortecido, SundaresanSubamortecido],
+        class_dyn: Union[
+            OrdemZero, PrimeiraOrdem, SundaresanSobreamortecido, SundaresanSubamortecido, SundaresanCriticamenteAmortecido],
         unidade: str
 ):
     doc = SimpleDocTemplate(
@@ -253,62 +308,27 @@ def gerar_relatorio_calibracao(
     # CARAC DINÂMICAS
     # -------------------------------------------------------
 
+    tipo = class_dyn.TIPO_AJUSTE
+    cfg = config[tipo]  # depende do tipo de ajuste dinamico
+
+    # titulo0
+    story.append(Paragraph(cfg["titulo"], estilo_secao))
+
+    # quação latex
+    eq_tf = tf_to_latex(*cfg["latex_args"](class_dyn))
+    img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
+    story.append(img_tf)
+    story.append(Spacer(1, 10))
+
+    # plot do modelo
+    img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)
+    img_dyn.hAlign = "CENTER"
+    story.append(img_dyn)
+
+    # tabela com as características
+    linhas_dyn = cfg["linhas"](class_dyn)
+
     story.append(Paragraph("Características dinâmicas", estilo_titulos_sub))
-
-    # tf_to_latex
-
-    if class_dyn.TIPO_AJUSTE == "0a_ordem":
-        story.append(Paragraph("Modelo de ordem 0:", estilo_secao))
-
-        eq_tf = tf_to_latex(0, class_dyn.K)
-        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
-        story.append(img_tf)
-
-        story.append(Spacer(1, 10))
-
-        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
-        img_dyn.hAlign = "CENTER"
-        story.append(img_dyn)
-
-        linhas_dyn = [["Ganho", f"{class_dyn.K:.4f}"]]
-
-    elif class_dyn.TIPO_AJUSTE == "1a_ordem":
-        story.append(Paragraph("Modelo de primeira ordem:", estilo_secao))
-
-        eq_tf = tf_to_latex(1, class_dyn.K, class_dyn.tau, )
-        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
-        story.append(img_tf)
-
-        story.append(Spacer(1, 10))
-
-        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
-        img_dyn.hAlign = "CENTER"
-        story.append(img_dyn)
-
-        linhas_dyn = [
-            ["Ganho", f"{class_dyn.K:.4f}"],
-            ["Constante de tempo", f"{class_dyn.tau:.4f}"]
-        ]
-
-    elif class_dyn.TIPO_AJUSTE == "2a_ordem_subamortecido":
-        story.append(Paragraph("Modelo de segunda ordem subamortecido:", estilo_secao))
-
-        eq_tf = tf_to_latex(2, class_dyn.K, class_dyn.tau_d, class_dyn.xi, class_dyn.wn)
-        img_tf = latex_to_rl_image(eq_tf, width=120, height=40)
-        story.append(img_tf)
-
-        story.append(Spacer(1, 10))
-
-        img_dyn = fig_to_rl_image(class_dyn.fig_dyn, width=400, height=200)  # imagem dinamico
-        img_dyn.hAlign = "CENTER"
-        story.append(img_dyn)
-
-        linhas_dyn = [
-            ["Ganho", f"{class_dyn.K:.4f}"],
-            ["Atraso puro de tempo", f"{class_dyn.tau_d:.4f}"],
-            ["Coeficiente de amortecimento", f"{class_dyn.xi:.4f}"],
-            ["Frequência natural", f"{class_dyn.wn:.4f}"],
-        ]
 
     story.append(Spacer(1, 10))
 
@@ -355,6 +375,6 @@ if __name__ == "__main__":
         sensor_name="Termopar XYZ-200",
         resp_name="Júlio César",
         class_sta=car_est,
-        class_dyn=modelo_sub,
+        class_dyn=modelo_crit,
         unidade="pos"
     )
