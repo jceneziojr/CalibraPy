@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import serial
+import unicodedata
 import serial.tools.list_ports
 import numpy as np
 from report_codes.static import CaracteristicasEstaticas
@@ -16,6 +17,7 @@ from report_codes.id_1_ordem import PrimeiraOrdem
 from report_codes.id_2_ordem_subam import SundaresanSubamortecido
 from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido
 from report_codes.id_2_ordem_critico import SundaresanCriticamenteAmortecido
+from report_codes.report_generator import RelatorioCalibracao
 from uis.ui_CalibraPy import Ui_CalibraPy
 
 from PySide6 import QtWidgets
@@ -27,6 +29,13 @@ from utils.config_din import DinConfigDialog
 from utils.din_acquisition import DynamicTest
 from utils.help_dialogs import DynamicHelp, StaticHelp
 from utils.export_config import ExportConfig
+
+
+def ajustar_str(texto):
+    # remover acentos
+    texto_sem_acento = unicodedata.normalize("NFKD", texto)
+    texto_sem_acento = "".join(c for c in texto_sem_acento if not unicodedata.combining(c))
+    return texto_sem_acento.replace(" ", "_")  # substitui espaço por _
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
@@ -57,7 +66,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self._nome = None
         self._sensor = None
         self._unidade = None
-        self.export_report_b.connect(self.generate_report)
+        self._destino = None
+        self.export_report_b.released.connect(self.generate_report)
 
         # configurações iniciais estatico
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -197,7 +207,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
     def generate_report(self):
         export_dialog = ExportConfig()
+
+        if self._nome and self._sensor and self._unidade and self._destino:
+            export_dialog.nome_input.setText(str(self._nome))
+            export_dialog.sensor_input.setText(str(self._sensor))
+            export_dialog.unidade_input.setText(str(self._unidade))
+            export_dialog.destino = self._destino
+
         export_dialog.exec()
+        self._nome = export_dialog.nome
+        self._sensor = export_dialog.sensor
+        self._unidade = export_dialog.unidade
+        self._destino = export_dialog.destino
+
+
+        nome_arquivo = f"relatorio_calibração-{ajustar_str(self._sensor)}.pdf"
+
+        rel = RelatorioCalibracao(pdf_file=os.path.join(self._destino, nome_arquivo),
+                                  sensor=self._sensor,
+                                  responsavel=self._nome,
+                                  sta=self.car_est,
+                                  dyn=self.car_din,
+                                  unidade=self._unidade)
+
+        rel.build()
 
     def dynamic_info(self):
         ajustes = {

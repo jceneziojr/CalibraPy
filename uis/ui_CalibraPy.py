@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
     QSpacerItem, QStatusBar, QTabWidget, QWidget)
 
 from pyqtgraph import PlotWidget
-import resources_rc
+from . import resources_rc
 
 class Ui_CalibraPy(object):
     def setupUi(self, CalibraPy):
