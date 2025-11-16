@@ -34,7 +34,7 @@ QPushButton#help_b_2{
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -47,109 +47,6 @@ QPushButton#help_b_2{
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0" alignment="Qt::AlignHCenter">
-            <widget class="QWidget" name="widget_2" native="true">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>50</height>
-              </size>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0" alignment="Qt::AlignLeft">
-               <widget class="QPushButton" name="config_acq_b">
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Configurar aquisição</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QPushButton" name="help_b">
-                <property name="minimumSize">
-                 <size>
-                  <width>23</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>23</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajuda sobre a calibração estática.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1" alignment="Qt::AlignRight">
-               <widget class="QPushButton" name="start_acq">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Começar aquisição</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QWidget" name="widget_5" native="true">
-             <layout class="QGridLayout" name="gridLayout_7">
-              <item row="0" column="0">
-               <widget class="PlotWidget" name="signal_plot" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>300</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>300</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QWidget" name="widget_3" native="true">
              <layout class="QGridLayout" name="gridLayout_5">
@@ -248,88 +145,203 @@ QPushButton#help_b_2{
              </layout>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="PlotWidget" name="points_plot" native="true"/>
-           </item>
-           <item row="4" column="0" alignment="Qt::AlignHCenter|Qt::AlignBottom">
-            <widget class="QWidget" name="widget_6" native="true">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_8">
-              <item row="0" column="1">
-               <widget class="QComboBox" name="ajuste_combo">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Primeiro grau (reta)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Segundo grau (curva)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Terceiro grau (curva)</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
+           <item row="1" column="0">
+            <widget class="QWidget" name="widget_5" native="true">
+             <layout class="QGridLayout" name="gridLayout_7">
               <item row="0" column="0">
-               <widget class="QLabel" name="label_2">
+               <widget class="PlotWidget" name="signal_plot" native="true">
                 <property name="minimumSize">
                  <size>
-                  <width>0</width>
+                  <width>300</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0" alignment="Qt::AlignHCenter">
+            <widget class="QWidget" name="widget_2" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>50</height>
+              </size>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0" alignment="Qt::AlignLeft">
+               <widget class="QPushButton" name="config_acq_b">
+                <property name="minimumSize">
+                 <size>
+                  <width>200</width>
                   <height>23</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>100</width>
+                  <width>200</width>
                   <height>23</height>
                  </size>
                 </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Tipo de ajuste&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Configurar aquisição</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QPushButton" name="finish_stat_b">
+               <widget class="QPushButton" name="help_b">
+                <property name="minimumSize">
+                 <size>
+                  <width>23</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>23</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajuda sobre a calibração estática.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1" alignment="Qt::AlignRight">
+               <widget class="QPushButton" name="start_acq">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>0</width>
+                  <width>200</width>
                   <height>23</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>16777215</width>
+                  <width>200</width>
                   <height>23</height>
                  </size>
                 </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Finaliza a aquisição e calcula as características estáticas do seu sensor.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
                 <property name="text">
-                 <string>Finalizar</string>
+                 <string>Começar aquisição</string>
                 </property>
                </widget>
               </item>
              </layout>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="PlotWidget" name="points_plot" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" alignment="Qt::AlignHCenter">
+         <widget class="QWidget" name="widget_6" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="3" rowspan="3" colspan="2">
+            <widget class="QPushButton" name="finish_stat_b">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Finaliza a aquisição e calcula as características estáticas do seu sensor.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Finalizar</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" rowspan="3" colspan="2">
+            <widget class="QComboBox" name="ajuste_combo">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Primeiro grau (reta)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Segundo grau (curva)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Terceiro grau (curva)</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="0" rowspan="3">
+            <widget class="QLabel" name="label_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Tipo de ajuste&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
             </widget>
            </item>
           </layout>
@@ -348,73 +360,144 @@ QPushButton#help_b_2{
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_10">
-           <item row="2" column="0">
-            <widget class="PlotWidget" name="test_plot" native="true"/>
-           </item>
            <item row="3" column="0" alignment="Qt::AlignHCenter|Qt::AlignBottom">
             <widget class="QWidget" name="widget_11" native="true">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_15">
+             <layout class="QGridLayout" name="gridLayout_12">
               <item row="0" column="1">
-               <widget class="QComboBox" name="dinamica_combo">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
+               <widget class="QWidget" name="widget_12" native="true">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Existe um delay da comunicação serial arduino de cerca de 4 segundos. Ajuste esse tempo a partir dos dados obtidos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Ordem zero</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Primeira ordem</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Segunda ordem subamortecido</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Segunda ordem criticamente amortecido</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Segunda ordem sobreamortecido</string>
-                 </property>
-                </item>
+                <layout class="QGridLayout" name="gridLayout_17">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label">
+                   <property name="minimumSize">
+                    <size>
+                     <width>120</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>120</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Tempo de atraso&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="delay_ajuste">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="maximum">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.500000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>4.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QLabel" name="label_3">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>120</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Tipo de dinâmica&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
+               <widget class="QWidget" name="widget_8" native="true">
+                <layout class="QGridLayout" name="gridLayout_15">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_3">
+                   <property name="minimumSize">
+                    <size>
+                     <width>120</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>120</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;Tipo de dinâmica&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="dinamica_combo">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Escolha o tipo de ajuste para a curva de calibração estática (a partir dos pontos no gráfico acima).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>Ordem zero</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Primeira ordem</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Segunda ordem subamortecido</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Segunda ordem criticamente amortecido</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Segunda ordem sobreamortecido</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-              <item row="0" column="2">
+              <item row="0" column="5">
                <widget class="QPushButton" name="finish_din_b">
                 <property name="enabled">
                  <bool>false</bool>
@@ -437,40 +520,6 @@ QPushButton#help_b_2{
                 <property name="text">
                  <string>Finalizar</string>
                 </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QWidget" name="widget_9" native="true">
-             <layout class="QGridLayout" name="gridLayout_13">
-              <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignTop">
-               <widget class="QWidget" name="widget_10" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_14">
-                 <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-                  <widget class="QPushButton" name="redo_test_b">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Refazer ensaio</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
               </item>
              </layout>
@@ -556,6 +605,43 @@ QPushButton#help_b_2{
               </item>
              </layout>
             </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QWidget" name="widget_9" native="true">
+             <layout class="QGridLayout" name="gridLayout_13">
+              <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignTop">
+               <widget class="QWidget" name="widget_10" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_14">
+                 <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+                  <widget class="QPushButton" name="redo_test_b">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Refazer ensaio</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="PlotWidget" name="test_plot" native="true"/>
            </item>
           </layout>
          </widget>
