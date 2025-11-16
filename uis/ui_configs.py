@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'configszVveyG.ui'
+## Form generated from reading UI file 'configsEXLAYr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -123,6 +123,10 @@ class Ui_Configs(object):
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
+        QWidget.setTabOrder(self.point_input, self.points_list)
+        QWidget.setTabOrder(self.points_list, self.remove_point_b)
+        QWidget.setTabOrder(self.remove_point_b, self.acq_points)
+        QWidget.setTabOrder(self.acq_points, self.finish_b)
 
         self.retranslateUi(Configs)
 

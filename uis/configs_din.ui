@@ -157,6 +157,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>amp_deg</tabstop>
+  <tabstop>tempo_sesh</tabstop>
+  <tabstop>finish_b</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

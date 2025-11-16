@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPynQRWVx.ui'
+## Form generated from reading UI file 'CalibraPyjuLGdg.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -15,12 +15,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpacerItem, QStatusBar, QTabWidget, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QGridLayout,
+    QLabel, QMainWindow, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QWidget)
 
 from pyqtgraph import PlotWidget
-from . import resources_rc
+import resources_rc
 
 class Ui_CalibraPy(object):
     def setupUi(self, CalibraPy):
@@ -56,51 +57,6 @@ class Ui_CalibraPy(object):
         self.estatico.setEnabled(True)
         self.gridLayout_3 = QGridLayout(self.estatico)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.widget_2 = QWidget(self.estatico)
-        self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setMinimumSize(QSize(0, 50))
-        self.widget_2.setMaximumSize(QSize(16777215, 50))
-        self.gridLayout_4 = QGridLayout(self.widget_2)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.config_acq_b = QPushButton(self.widget_2)
-        self.config_acq_b.setObjectName(u"config_acq_b")
-        self.config_acq_b.setMinimumSize(QSize(200, 23))
-        self.config_acq_b.setMaximumSize(QSize(200, 23))
-
-        self.gridLayout_4.addWidget(self.config_acq_b, 0, 0, 1, 1, Qt.AlignLeft)
-
-        self.help_b = QPushButton(self.widget_2)
-        self.help_b.setObjectName(u"help_b")
-        self.help_b.setMinimumSize(QSize(23, 23))
-        self.help_b.setMaximumSize(QSize(23, 23))
-
-        self.gridLayout_4.addWidget(self.help_b, 0, 2, 1, 1)
-
-        self.start_acq = QPushButton(self.widget_2)
-        self.start_acq.setObjectName(u"start_acq")
-        self.start_acq.setEnabled(False)
-        self.start_acq.setMinimumSize(QSize(200, 23))
-        self.start_acq.setMaximumSize(QSize(200, 23))
-
-        self.gridLayout_4.addWidget(self.start_acq, 0, 1, 1, 1, Qt.AlignRight)
-
-
-        self.gridLayout_3.addWidget(self.widget_2, 0, 0, 1, 1, Qt.AlignHCenter)
-
-        self.widget_5 = QWidget(self.estatico)
-        self.widget_5.setObjectName(u"widget_5")
-        self.gridLayout_7 = QGridLayout(self.widget_5)
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.signal_plot = PlotWidget(self.widget_5)
-        self.signal_plot.setObjectName(u"signal_plot")
-        self.signal_plot.setMinimumSize(QSize(300, 0))
-        self.signal_plot.setMaximumSize(QSize(300, 16777215))
-
-        self.gridLayout_7.addWidget(self.signal_plot, 0, 0, 1, 1)
-
-
-        self.gridLayout_3.addWidget(self.widget_5, 1, 0, 1, 1)
-
         self.widget_3 = QWidget(self.estatico)
         self.widget_3.setObjectName(u"widget_3")
         self.gridLayout_5 = QGridLayout(self.widget_3)
@@ -148,15 +104,73 @@ class Ui_CalibraPy(object):
 
         self.gridLayout_3.addWidget(self.widget_3, 2, 0, 1, 1)
 
+        self.widget_5 = QWidget(self.estatico)
+        self.widget_5.setObjectName(u"widget_5")
+        self.gridLayout_7 = QGridLayout(self.widget_5)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.signal_plot = PlotWidget(self.widget_5)
+        self.signal_plot.setObjectName(u"signal_plot")
+        self.signal_plot.setMinimumSize(QSize(300, 0))
+        self.signal_plot.setMaximumSize(QSize(300, 16777215))
+
+        self.gridLayout_7.addWidget(self.signal_plot, 0, 0, 1, 1)
+
+
+        self.gridLayout_3.addWidget(self.widget_5, 1, 0, 1, 1)
+
+        self.widget_2 = QWidget(self.estatico)
+        self.widget_2.setObjectName(u"widget_2")
+        self.widget_2.setMinimumSize(QSize(0, 50))
+        self.widget_2.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_4 = QGridLayout(self.widget_2)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.config_acq_b = QPushButton(self.widget_2)
+        self.config_acq_b.setObjectName(u"config_acq_b")
+        self.config_acq_b.setMinimumSize(QSize(200, 23))
+        self.config_acq_b.setMaximumSize(QSize(200, 23))
+
+        self.gridLayout_4.addWidget(self.config_acq_b, 0, 0, 1, 1, Qt.AlignLeft)
+
+        self.help_b = QPushButton(self.widget_2)
+        self.help_b.setObjectName(u"help_b")
+        self.help_b.setMinimumSize(QSize(23, 23))
+        self.help_b.setMaximumSize(QSize(23, 23))
+
+        self.gridLayout_4.addWidget(self.help_b, 0, 2, 1, 1)
+
+        self.start_acq = QPushButton(self.widget_2)
+        self.start_acq.setObjectName(u"start_acq")
+        self.start_acq.setEnabled(False)
+        self.start_acq.setMinimumSize(QSize(200, 23))
+        self.start_acq.setMaximumSize(QSize(200, 23))
+
+        self.gridLayout_4.addWidget(self.start_acq, 0, 1, 1, 1, Qt.AlignRight)
+
+
+        self.gridLayout_3.addWidget(self.widget_2, 0, 0, 1, 1, Qt.AlignHCenter)
+
         self.points_plot = PlotWidget(self.estatico)
         self.points_plot.setObjectName(u"points_plot")
 
         self.gridLayout_3.addWidget(self.points_plot, 3, 0, 1, 1)
 
-        self.widget_6 = QWidget(self.estatico)
+
+        self.gridLayout_9.addWidget(self.estatico, 0, 0, 1, 1)
+
+        self.widget_6 = QWidget(self.tab)
         self.widget_6.setObjectName(u"widget_6")
+        self.widget_6.setMinimumSize(QSize(0, 50))
+        self.widget_6.setMaximumSize(QSize(16777215, 50))
         self.gridLayout_8 = QGridLayout(self.widget_6)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.finish_stat_b = QPushButton(self.widget_6)
+        self.finish_stat_b.setObjectName(u"finish_stat_b")
+        self.finish_stat_b.setEnabled(False)
+        self.finish_stat_b.setMinimumSize(QSize(0, 23))
+        self.finish_stat_b.setMaximumSize(QSize(16777215, 23))
+
+        self.gridLayout_8.addWidget(self.finish_stat_b, 0, 3, 3, 2)
+
         self.ajuste_combo = QComboBox(self.widget_6)
         self.ajuste_combo.addItem("")
         self.ajuste_combo.addItem("")
@@ -164,28 +178,17 @@ class Ui_CalibraPy(object):
         self.ajuste_combo.setObjectName(u"ajuste_combo")
         self.ajuste_combo.setEnabled(True)
 
-        self.gridLayout_8.addWidget(self.ajuste_combo, 0, 1, 1, 1)
+        self.gridLayout_8.addWidget(self.ajuste_combo, 0, 1, 3, 2)
 
         self.label_2 = QLabel(self.widget_6)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setMinimumSize(QSize(0, 23))
         self.label_2.setMaximumSize(QSize(100, 23))
 
-        self.gridLayout_8.addWidget(self.label_2, 0, 0, 1, 1)
-
-        self.finish_stat_b = QPushButton(self.widget_6)
-        self.finish_stat_b.setObjectName(u"finish_stat_b")
-        self.finish_stat_b.setEnabled(False)
-        self.finish_stat_b.setMinimumSize(QSize(0, 23))
-        self.finish_stat_b.setMaximumSize(QSize(16777215, 23))
-
-        self.gridLayout_8.addWidget(self.finish_stat_b, 0, 2, 1, 1)
+        self.gridLayout_8.addWidget(self.label_2, 0, 0, 3, 1)
 
 
-        self.gridLayout_3.addWidget(self.widget_6, 4, 0, 1, 1, Qt.AlignHCenter|Qt.AlignBottom)
-
-
-        self.gridLayout_9.addWidget(self.estatico, 0, 0, 1, 1)
+        self.gridLayout_9.addWidget(self.widget_6, 1, 0, 1, 1, Qt.AlignHCenter)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
@@ -197,16 +200,46 @@ class Ui_CalibraPy(object):
         self.dinamico.setEnabled(True)
         self.gridLayout_10 = QGridLayout(self.dinamico)
         self.gridLayout_10.setObjectName(u"gridLayout_10")
-        self.test_plot = PlotWidget(self.dinamico)
-        self.test_plot.setObjectName(u"test_plot")
-
-        self.gridLayout_10.addWidget(self.test_plot, 2, 0, 1, 1)
-
         self.widget_11 = QWidget(self.dinamico)
         self.widget_11.setObjectName(u"widget_11")
-        self.gridLayout_15 = QGridLayout(self.widget_11)
+        self.gridLayout_12 = QGridLayout(self.widget_11)
+        self.gridLayout_12.setObjectName(u"gridLayout_12")
+        self.widget_12 = QWidget(self.widget_11)
+        self.widget_12.setObjectName(u"widget_12")
+        self.gridLayout_17 = QGridLayout(self.widget_12)
+        self.gridLayout_17.setObjectName(u"gridLayout_17")
+        self.label = QLabel(self.widget_12)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(120, 23))
+        self.label.setMaximumSize(QSize(120, 23))
+
+        self.gridLayout_17.addWidget(self.label, 0, 0, 1, 1)
+
+        self.delay_ajuste = QDoubleSpinBox(self.widget_12)
+        self.delay_ajuste.setObjectName(u"delay_ajuste")
+        self.delay_ajuste.setMinimumSize(QSize(0, 23))
+        self.delay_ajuste.setMaximumSize(QSize(16777215, 23))
+        self.delay_ajuste.setMaximum(10.000000000000000)
+        self.delay_ajuste.setSingleStep(0.500000000000000)
+        self.delay_ajuste.setValue(4.000000000000000)
+
+        self.gridLayout_17.addWidget(self.delay_ajuste, 0, 1, 1, 1)
+
+
+        self.gridLayout_12.addWidget(self.widget_12, 0, 1, 1, 1)
+
+        self.widget_8 = QWidget(self.widget_11)
+        self.widget_8.setObjectName(u"widget_8")
+        self.gridLayout_15 = QGridLayout(self.widget_8)
         self.gridLayout_15.setObjectName(u"gridLayout_15")
-        self.dinamica_combo = QComboBox(self.widget_11)
+        self.label_3 = QLabel(self.widget_8)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(120, 23))
+        self.label_3.setMaximumSize(QSize(120, 23))
+
+        self.gridLayout_15.addWidget(self.label_3, 0, 0, 1, 1)
+
+        self.dinamica_combo = QComboBox(self.widget_8)
         self.dinamica_combo.addItem("")
         self.dinamica_combo.addItem("")
         self.dinamica_combo.addItem("")
@@ -214,15 +247,13 @@ class Ui_CalibraPy(object):
         self.dinamica_combo.addItem("")
         self.dinamica_combo.setObjectName(u"dinamica_combo")
         self.dinamica_combo.setEnabled(True)
+        self.dinamica_combo.setMinimumSize(QSize(0, 23))
+        self.dinamica_combo.setMaximumSize(QSize(16777215, 23))
 
         self.gridLayout_15.addWidget(self.dinamica_combo, 0, 1, 1, 1)
 
-        self.label_3 = QLabel(self.widget_11)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setMinimumSize(QSize(0, 23))
-        self.label_3.setMaximumSize(QSize(120, 23))
 
-        self.gridLayout_15.addWidget(self.label_3, 0, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.widget_8, 0, 0, 1, 1)
 
         self.finish_din_b = QPushButton(self.widget_11)
         self.finish_din_b.setObjectName(u"finish_din_b")
@@ -230,32 +261,10 @@ class Ui_CalibraPy(object):
         self.finish_din_b.setMinimumSize(QSize(0, 23))
         self.finish_din_b.setMaximumSize(QSize(16777215, 23))
 
-        self.gridLayout_15.addWidget(self.finish_din_b, 0, 2, 1, 1)
+        self.gridLayout_12.addWidget(self.finish_din_b, 0, 5, 1, 1)
 
 
         self.gridLayout_10.addWidget(self.widget_11, 3, 0, 1, 1, Qt.AlignHCenter|Qt.AlignBottom)
-
-        self.widget_9 = QWidget(self.dinamico)
-        self.widget_9.setObjectName(u"widget_9")
-        self.gridLayout_13 = QGridLayout(self.widget_9)
-        self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.widget_10 = QWidget(self.widget_9)
-        self.widget_10.setObjectName(u"widget_10")
-        self.widget_10.setMinimumSize(QSize(0, 50))
-        self.widget_10.setMaximumSize(QSize(16777215, 50))
-        self.gridLayout_14 = QGridLayout(self.widget_10)
-        self.gridLayout_14.setObjectName(u"gridLayout_14")
-        self.redo_test_b = QPushButton(self.widget_10)
-        self.redo_test_b.setObjectName(u"redo_test_b")
-        self.redo_test_b.setEnabled(False)
-
-        self.gridLayout_14.addWidget(self.redo_test_b, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
-
-
-        self.gridLayout_13.addWidget(self.widget_10, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignTop)
-
-
-        self.gridLayout_10.addWidget(self.widget_9, 1, 0, 1, 1)
 
         self.widget_7 = QWidget(self.dinamico)
         self.widget_7.setObjectName(u"widget_7")
@@ -287,6 +296,33 @@ class Ui_CalibraPy(object):
 
 
         self.gridLayout_10.addWidget(self.widget_7, 0, 0, 1, 1, Qt.AlignHCenter)
+
+        self.widget_9 = QWidget(self.dinamico)
+        self.widget_9.setObjectName(u"widget_9")
+        self.gridLayout_13 = QGridLayout(self.widget_9)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.widget_10 = QWidget(self.widget_9)
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setMinimumSize(QSize(0, 50))
+        self.widget_10.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_14 = QGridLayout(self.widget_10)
+        self.gridLayout_14.setObjectName(u"gridLayout_14")
+        self.redo_test_b = QPushButton(self.widget_10)
+        self.redo_test_b.setObjectName(u"redo_test_b")
+        self.redo_test_b.setEnabled(False)
+
+        self.gridLayout_14.addWidget(self.redo_test_b, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
+
+
+        self.gridLayout_13.addWidget(self.widget_10, 0, 0, 1, 1, Qt.AlignHCenter|Qt.AlignTop)
+
+
+        self.gridLayout_10.addWidget(self.widget_9, 1, 0, 1, 1)
+
+        self.test_plot = PlotWidget(self.dinamico)
+        self.test_plot.setObjectName(u"test_plot")
+
+        self.gridLayout_10.addWidget(self.test_plot, 2, 0, 1, 1)
 
 
         self.gridLayout_16.addWidget(self.dinamico, 0, 0, 1, 1)
@@ -352,7 +388,7 @@ class Ui_CalibraPy(object):
 
         self.retranslateUi(CalibraPy)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(CalibraPy)
@@ -360,19 +396,23 @@ class Ui_CalibraPy(object):
 
     def retranslateUi(self, CalibraPy):
         CalibraPy.setWindowTitle(QCoreApplication.translate("CalibraPy", u"MainWindow", None))
+        self.acq_b.setText(QCoreApplication.translate("CalibraPy", u"Adquirir ponto", None))
+        self.status_l.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Ponto atual: X   (Y de Z)</span></p></body></html>", None))
+        self.redo_point_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
+        self.next_point_b.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
         self.config_acq_b.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
 #if QT_CONFIG(tooltip)
         self.help_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.help_b.setText("")
         self.start_acq.setText(QCoreApplication.translate("CalibraPy", u"Come\u00e7ar aquisi\u00e7\u00e3o", None))
-        self.acq_b.setText(QCoreApplication.translate("CalibraPy", u"Adquirir ponto", None))
-        self.status_l.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Ponto atual: X   (Y de Z)</span></p></body></html>", None))
-        self.redo_point_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ponto", None))
-        self.next_point_b.setText(QCoreApplication.translate("CalibraPy", u"Pr\u00f3ximo ponto", None))
 #if QT_CONFIG(tooltip)
         self.widget_6.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.finish_stat_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.finish_stat_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
         self.ajuste_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Primeiro grau (reta)", None))
         self.ajuste_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Segundo grau (curva)", None))
         self.ajuste_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Terceiro grau (curva)", None))
@@ -384,14 +424,21 @@ class Ui_CalibraPy(object):
         self.label_2.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de ajuste</span></p></body></html>", None))
-#if QT_CONFIG(tooltip)
-        self.finish_stat_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.finish_stat_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("CalibraPy", u"Est\u00e1tico", None))
 #if QT_CONFIG(tooltip)
         self.widget_11.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.widget_12.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Existe um delay da comunica\u00e7\u00e3o serial arduino de cerca de 4 segundos. Ajuste esse tempo a partir dos dados obtidos.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tempo de atraso</span></p></body></html>", None))
+#if QT_CONFIG(tooltip)
+        self.delay_ajuste.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><br/></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_3.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de din\u00e2mica</span></p></body></html>", None))
         self.dinamica_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Ordem zero", None))
         self.dinamica_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Primeira ordem", None))
         self.dinamica_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Segunda ordem subamortecido", None))
@@ -402,20 +449,16 @@ class Ui_CalibraPy(object):
         self.dinamica_combo.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.label_3.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_3.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Tipo de din\u00e2mica</span></p></body></html>", None))
-#if QT_CONFIG(tooltip)
         self.finish_din_b.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Finaliza a aquisi\u00e7\u00e3o e calcula as caracter\u00edsticas est\u00e1ticas do seu sensor.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.finish_din_b.setText(QCoreApplication.translate("CalibraPy", u"Finalizar", None))
-        self.redo_test_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ensaio", None))
         self.config_acq_b_2.setText(QCoreApplication.translate("CalibraPy", u"Configurar aquisi\u00e7\u00e3o", None))
 #if QT_CONFIG(tooltip)
         self.help_b_2.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Ajuda sobre a calibra\u00e7\u00e3o est\u00e1tica.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.help_b_2.setText("")
         self.start_acq_2.setText(QCoreApplication.translate("CalibraPy", u"Come\u00e7ar aquisi\u00e7\u00e3o", None))
+        self.redo_test_b.setText(QCoreApplication.translate("CalibraPy", u"Refazer ensaio", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("CalibraPy", u"Din\u00e2mico", None))
         self.device_label.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>", None))
         self.reload_devices.setText("")

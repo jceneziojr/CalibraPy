@@ -193,6 +193,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>point_input</tabstop>
+  <tabstop>points_list</tabstop>
+  <tabstop>remove_point_b</tabstop>
+  <tabstop>acq_points</tabstop>
+  <tabstop>finish_b</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

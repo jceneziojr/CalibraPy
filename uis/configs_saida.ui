@@ -207,6 +207,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>nome_input</tabstop>
+  <tabstop>sensor_input</tabstop>
+  <tabstop>unidade_input</tabstop>
+  <tabstop>finish_b</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

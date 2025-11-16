@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'configs_dinAgnxRN.ui'
+## Form generated from reading UI file 'configs_dinYWdqgo.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -95,6 +95,8 @@ class Ui_Configs(object):
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
+        QWidget.setTabOrder(self.amp_deg, self.tempo_sesh)
+        QWidget.setTabOrder(self.tempo_sesh, self.finish_b)
 
         self.retranslateUi(Configs)
 

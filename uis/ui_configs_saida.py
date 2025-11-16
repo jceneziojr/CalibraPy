@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'configs_saidaSoBnzn.ui'
+## Form generated from reading UI file 'configs_saidaXmZFFA.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -116,6 +116,9 @@ class Ui_ConfigsSaida(object):
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
+        QWidget.setTabOrder(self.nome_input, self.sensor_input)
+        QWidget.setTabOrder(self.sensor_input, self.unidade_input)
+        QWidget.setTabOrder(self.unidade_input, self.finish_b)
 
         self.retranslateUi(ConfigsSaida)
 
