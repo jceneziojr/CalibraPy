@@ -68,10 +68,7 @@ class GetSignal(QObject):
                         # se parsing falhar, ignora
                         pass
             except Exception as e:
-                # erro de leitura (porta fechada, timeout, etc.)
                 print("Erro na leitura serial (loop contínuo):", e)
-                # opcional: break  -> aqui apenas espera e continua
-                # break
 
             # --- processa request atual ou pega nova ---
             now = time.monotonic()
@@ -124,9 +121,6 @@ class GetSignal(QObject):
             delay = 0.001 + (st - et)
             if delay > 0:
                 time.sleep(delay)
-
-        # fim while
-        print("GetSignal: thread encerrada.")
 
     def thread(self, func_to_pass, *args, **kwargs):
         worker = Worker(func_to_pass, *args, **kwargs)

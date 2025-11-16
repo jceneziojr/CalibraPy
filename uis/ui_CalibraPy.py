@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CalibraPyrLAKVa.ui'
+## Form generated from reading UI file 'CalibraPynQRWVx.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.0
 ##
@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
     QSpacerItem, QStatusBar, QTabWidget, QWidget)
 
 from pyqtgraph import PlotWidget
-from . import resources_rc
+import resources_rc
 
 class Ui_CalibraPy(object):
     def setupUi(self, CalibraPy):
@@ -211,6 +211,7 @@ class Ui_CalibraPy(object):
         self.dinamica_combo.addItem("")
         self.dinamica_combo.addItem("")
         self.dinamica_combo.addItem("")
+        self.dinamica_combo.addItem("")
         self.dinamica_combo.setObjectName(u"dinamica_combo")
         self.dinamica_combo.setEnabled(True)
 
@@ -394,7 +395,8 @@ class Ui_CalibraPy(object):
         self.dinamica_combo.setItemText(0, QCoreApplication.translate("CalibraPy", u"Ordem zero", None))
         self.dinamica_combo.setItemText(1, QCoreApplication.translate("CalibraPy", u"Primeira ordem", None))
         self.dinamica_combo.setItemText(2, QCoreApplication.translate("CalibraPy", u"Segunda ordem subamortecido", None))
-        self.dinamica_combo.setItemText(3, QCoreApplication.translate("CalibraPy", u"Segunda ordem sobreamortecido", None))
+        self.dinamica_combo.setItemText(3, QCoreApplication.translate("CalibraPy", u"Segunda ordem criticamente amortecido", None))
+        self.dinamica_combo.setItemText(4, QCoreApplication.translate("CalibraPy", u"Segunda ordem sobreamortecido", None))
 
 #if QT_CONFIG(tooltip)
         self.dinamica_combo.setToolTip(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p>Escolha o tipo de ajuste para a curva de calibra\u00e7\u00e3o est\u00e1tica (a partir dos pontos no gr\u00e1fico acima).</p></body></html>", None))
@@ -417,6 +419,6 @@ class Ui_CalibraPy(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("CalibraPy", u"Din\u00e2mico", None))
         self.device_label.setText(QCoreApplication.translate("CalibraPy", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:700;\">Selecione o Arduino</span></p></body></html>", None))
         self.reload_devices.setText("")
-        self.export_report_b.setText(QCoreApplication.translate("CalibraPy", u"Exportar Report", None))
+        self.export_report_b.setText(QCoreApplication.translate("CalibraPy", u"Exportar Relat\u00f3rio", None))
     # retranslateUi
 

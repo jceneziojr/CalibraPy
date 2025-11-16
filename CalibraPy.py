@@ -9,9 +9,13 @@ import time
 import serial
 import serial.tools.list_ports
 import numpy as np
-import matplotlib as mpl
 from report_codes.static import CaracteristicasEstaticas
 
+from report_codes.id_0_ordem import OrdemZero
+from report_codes.id_1_ordem import PrimeiraOrdem
+from report_codes.id_2_ordem_subam import SundaresanSubamortecido
+from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido
+from report_codes.id_2_ordem_critico import SundaresanCriticamenteAmortecido
 from uis.ui_CalibraPy import Ui_CalibraPy
 
 from PySide6 import QtWidgets
@@ -22,8 +26,7 @@ from utils.config_stat import StatConfigDialog
 from utils.config_din import DinConfigDialog
 from utils.din_acquisition import DynamicTest
 from utils.help_dialogs import DynamicHelp, StaticHelp
-
-import matplotlib.pyplot as plt
+from utils.export_config import ExportConfig
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
@@ -41,7 +44,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.next_point_b.released.connect(self.next_point_handle)
         self.redo_point_b.released.connect(self.redo_point_handle)
         self.finish_stat_b.released.connect(self.finish_stat_handle)
-        self.ajuste_combo.currentIndexChanged.connect(lambda: print(self.ajuste_combo.currentIndex()))
         self.help_b.released.connect(self.open_help_s)
 
         # conectando sinais dinamico
@@ -50,6 +52,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.redo_test_b.released.connect(self.redo_teste_handle)
         self.finish_din_b.released.connect(self.finish_din_test_handle)
         self.help_b_2.released.connect(self.open_help_d)
+
+        # variaveis do report
+        self._nome = None
+        self._sensor = None
+        self._unidade = None
+        self.export_report_b.connect(self.generate_report)
 
         # configurações iniciais estatico
         self.acquisition_points = 5  # numero de aquisições em cada ponto
@@ -159,7 +167,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
     def finish_din_test_handle(self):
         self.redo_test_b.setEnabled(False)
         self.config_acq_b_2.setEnabled(False)
+        self.tab.setEnabled(True)
 
+        self.dynamic_info()
         if hasattr(self, "din_teste"):
             self.din_teste.stop()
             # aguarda a threadpool processar(não sei se realmente precisa)
@@ -182,6 +192,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         #     else:
         #         print("⚠️ O espaçamento NÃO é uniforme.")
 
+        if self.dynamic_report_done and self.static_report_done:
+            self.export_report_b.setEnabled(True)
+
+    def generate_report(self):
+        export_dialog = ExportConfig()
+        export_dialog.exec()
+
+    def dynamic_info(self):
+        ajustes = {
+            0: OrdemZero,
+            1: PrimeiraOrdem,
+            2: SundaresanSubamortecido,
+            3: SundaresanCriticamenteAmortecido,
+            4: SundaresanSobreamortecido
+        }
+
+        classe_escolhida = ajustes.get(self.dinamica_combo.currentIndex())
+
+        if classe_escolhida is not None:
+            self.car_din = classe_escolhida(self.din_x, self.dados_plot_din, self.amplitude_degrau)
+
+        self.car_din.fig_dyn.show()
+        self.dynamic_report_done = True
+
     def open_help_s(self):
         dialog = StaticHelp()
         dialog.exec()
@@ -203,6 +237,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.dt = 0.01
         self.din_teste.start(self.tempo_sessao, dt=self.dt)
         self.start_acq_2.setEnabled(False)
+        self.tab.setEnabled(False)
 
     def din_plot_handle(self, t, y):
         self.dados_plot_din.append(y)
@@ -295,9 +330,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.startup_acquisition_process()
 
     def on_acq_button_pressed(self):
-        # desabilita o botão enquanto a aquisição pontual está em curso (opcional)
         self.acq_b.setEnabled(False)
-        # solicita N pontos com intervalo de 0.5s (substitua self.acquisition_points conforme necessário)
+        # solicita os pontos com intervalo de 0.5s
         self.get_signal.request_samples(self.acquisition_points, interval=0.5)
 
     def handle_static_acq_process(self, samples):
@@ -371,13 +405,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.tab_2.setEnabled(True)
         self.signal_plot.clear()
 
+        if self.dynamic_report_done and self.static_report_done:
+            self.export_report_b.setEnabled(True)
+
     def static_info(self):
 
-        car_est = CaracteristicasEstaticas(self.pontos, self.forward_dict, self.backward_dict,
-                                           self.ajuste_combo.currentIndex() + 1)
-        car_est.fig_ccs.show()
-        car_est.fig_csens.show()
-        car_est.fig_hist.show()
+        self.car_est = CaracteristicasEstaticas(self.pontos, self.forward_dict, self.backward_dict,
+                                                self.ajuste_combo.currentIndex() + 1)
+        self.car_est.fig_ccs.show()
+        self.car_est.fig_csens.show()
+        self.car_est.fig_hist.show()
 
         self.static_report_done = True
 

@@ -382,6 +382,11 @@ QPushButton#help_b_2{
                 </item>
                 <item>
                  <property name="text">
+                  <string>Segunda ordem criticamente amortecido</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
                   <string>Segunda ordem sobreamortecido</string>
                  </property>
                 </item>
@@ -675,7 +680,7 @@ QPushButton#help_b_2{
        </size>
       </property>
       <property name="text">
-       <string>Exportar Report</string>
+       <string>Exportar Relatório</string>
       </property>
      </widget>
     </item>

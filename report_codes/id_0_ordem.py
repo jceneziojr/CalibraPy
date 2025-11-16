@@ -54,6 +54,7 @@ class OrdemZero:
         ax.set_xlabel("Tempo [s]", fontsize=14)
         ax.set_ylabel("Amplitude", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)
+        ax.margins(y=0.9)
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()

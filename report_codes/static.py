@@ -136,6 +136,7 @@ class CaracteristicasEstaticas:
         ax1.set_ylabel('Sensibilidade', fontsize=14)
         ax1.set_title('Curva de sensibilidade', fontsize=14)
         ax1.grid(True)
+        ax1.margins(y=0.9)
         ax1.legend()
         self.fig_csens.tight_layout()
 
@@ -147,6 +148,7 @@ class CaracteristicasEstaticas:
         ax2.set_ylabel('Saída', fontsize=14)
         ax2.set_title('Análise de histerese', fontsize=14)
         ax2.grid(True)
+        ax2.margins(y=0.9)
         ax2.legend()
         self.fig_hist.tight_layout()
 

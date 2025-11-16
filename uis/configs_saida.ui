@@ -34,7 +34,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="acq_points">
+          <widget class="QLineEdit" name="nome_input">
            <property name="minimumSize">
             <size>
              <width>200</width>
@@ -131,7 +131,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="acq_points_2">
+          <widget class="QLineEdit" name="sensor_input">
            <property name="minimumSize">
             <size>
              <width>200</width>
@@ -175,7 +175,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="acq_points_3">
+          <widget class="QLineEdit" name="unidade_input">
            <property name="minimumSize">
             <size>
              <width>200</width>
