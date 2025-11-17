@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CalibraPy</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QPushButton#reload_devices{

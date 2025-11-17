@@ -1,10 +1,10 @@
 import numpy as np
 from scipy.signal import lti, step
 
-from .id_2_ordem_sobream import SundaresanSobreamortecido
+from .id_2_ordem_subam import SundaresanSubamortecido
 
 
-class SundaresanCriticamenteAmortecido(SundaresanSobreamortecido):
+class SundaresanCriticamenteAmortecido(SundaresanSubamortecido):
     TIPO_AJUSTE = "2a_ordem_critico"
 
 
