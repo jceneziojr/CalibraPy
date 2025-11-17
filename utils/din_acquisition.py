@@ -15,7 +15,7 @@ class DynamicTest(QObject):
         self.threadpool = QThreadPool()
         self._running = False
         self.total_time = 0
-        self.dt = 0.01
+        self.dt = 0.001
         self.collected_data = []  # apenas y
         self.collected_time = []  # guarda também o tempo
 
@@ -87,6 +87,7 @@ class DynamicTest(QObject):
             delay = max(0, self.dt - loop_elapsed)
             if delay > 0:
                 # time.sleep(delay)
+                print("loop_elapsed")
                 QThread.msleep(int(delay * 1000))
 
         self.session_finished.emit(list(self.collected_data))

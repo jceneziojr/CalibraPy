@@ -220,7 +220,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self._unidade = export_dialog.unidade
         self._destino = export_dialog.destino
 
-
         nome_arquivo = f"relatorio_calibração-{ajustar_str(self._sensor)}.pdf"
 
         rel = RelatorioCalibracao(pdf_file=os.path.join(self._destino, nome_arquivo),
@@ -243,8 +242,25 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         classe_escolhida = ajustes.get(self.dinamica_combo.currentIndex())
 
+        t_ajuste_delay = self.delay_ajuste.value()  # pra ajustar o delay entre serial arduino e python
+
+        x = np.array(self.din_x)
+        y = np.array(self.dados_plot_din)
+
+        mask = x >= t_ajuste_delay  # pegando os dados após o tempo de ajuste
+
+        x2 = x[mask]
+
+        # pra fazer o início acontecer em 0
+        if len(x2) > 0:
+            x2 = x2 - x2[0]
+
+        # pra não perder os dados e ter como refazer
+        din_x = x2.tolist()
+        dados_plot_din = y[mask].tolist()
+
         if classe_escolhida is not None:
-            self.car_din = classe_escolhida(self.din_x, self.dados_plot_din, self.amplitude_degrau)
+            self.car_din = classe_escolhida(din_x, dados_plot_din, self.amplitude_degrau)
 
         self.car_din.fig_dyn.show()
         self.dynamic_report_done = True
@@ -316,11 +332,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             -1
         )
 
-        # index_arduino = next(
-        #     (i for i, desc in enumerate(self.com_ports)
-        #      if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
-        #     -1
-        # )
+        index_arduino = next(
+            (i for i, desc in enumerate(self.com_ports)
+             if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
+            -1
+        )
 
         if index_arduino != -1:
             self.device_combo.setCurrentIndex(index_arduino)

@@ -20,7 +20,17 @@ class SundaresanSobreamortecido:
         self.t = np.array(t)
         self.y = np.array(y)
         self.amplitude_degrau = float(amplitude_degrau)
-        self.dt = dt if dt is not None else float(t[1] - t[0])
+        # self.dt = dt if dt is not None else float(t[1] - t[0])
+
+        # reconstruindo o vetor de tempo, pra ser espaçado igualmente
+        dts = np.diff(self.t)
+        dt_medio = np.mean(dts)
+        self.dt = np.round(dt_medio, 3)
+
+        t0 = self.t[0]
+        N = len(self.t)
+
+        self.t = t0 + np.arange(N) * self.dt
 
         # parâmetros de saída
         self.K = None
