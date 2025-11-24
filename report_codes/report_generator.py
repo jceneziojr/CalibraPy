@@ -213,7 +213,7 @@ class RelatorioCalibracao:
             ["Erro de linearidade - L (%)" if self.sta.ordem_ajuste == 1 else "Erro de conformidade - C (%)",
              f"{self.sta.erro_ajuste:.2f}%"],
             ["Erro de histerese - H (%)", f"{self.sta.erro_histerese:.2f}%"],
-            ["Fundo de escala - FES", f"{self.sta.points[-1]:.2f} [{self.unidade}]"]
+            ["Fundo de escala de saída - FES", f"5 [V]"]
         ]
 
         tabela = Table(linhas, colWidths=[9 * cm, 4 * cm])

@@ -84,7 +84,7 @@ class CaracteristicasEstaticas:
         for p in self.points:
             repetibilidade[p] = float(
                 (np.max(self.forward_dict[p] + self.backward_dict[p]) -
-                 np.min(self.forward_dict[p] + self.backward_dict[p])) * 100 / self.points[-1]
+                 np.min(self.forward_dict[p] + self.backward_dict[p])) * 100 / 5
             )
 
         self.repetibilidade = repetibilidade
@@ -103,14 +103,14 @@ class CaracteristicasEstaticas:
         diffs = np.abs(np.array(valores) - np.array(self.avg_pts))
 
         Dfm = np.max(diffs)
-        self.erro_ajuste = (Dfm / self.points[-1]) * 100
+        self.erro_ajuste = (Dfm / 5) * 100
 
     # ============================================================
     def _calcular_histerese(self):
         """Histerese: diferença entre forward e backward."""
         diferencas = np.abs(np.array(self.fwd_avg) - np.array(self.bwd_avg))
         Hmax = np.max(diferencas)
-        self.erro_histerese = (Hmax / self.points[-1]) * 100
+        self.erro_histerese = (Hmax / 5) * 100
 
     # ============================================================
     def _gerar_plots(self):
