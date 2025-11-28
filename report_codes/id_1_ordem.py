@@ -83,19 +83,3 @@ class PrimeiraOrdem:
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()
-
-
-# --- gera dados simulados ---
-K_real = 2.0
-tau_real = 4
-t_final = 30
-dt = 0.01
-t = np.arange(0, t_final, dt)
-y_clean = K_real * (1 - np.exp(-t / tau_real))
-
-np.random.seed(42)
-noise = np.random.normal(0, 0.005 * K_real, size=t.shape)
-y_noisy = y_clean + noise
-
-# --- aplica identificação ---
-modelo_1ordem = PrimeiraOrdem(t, y_noisy, amplitude_degrau=1, dt=dt)

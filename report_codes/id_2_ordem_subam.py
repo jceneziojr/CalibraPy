@@ -185,27 +185,3 @@ class SundaresanSubamortecido:
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()
-
-
-# ===========================================================
-# Teste com dados simulados
-# ===========================================================
-K_real = 2.0
-wn_real = 2.0
-xi_real = 0.75  # subamortecido
-t_final = 30
-dt = 0.01
-t = np.arange(0, t_final, dt)
-
-num = [K_real * wn_real ** 2]
-den = [1, 2 * xi_real * wn_real, wn_real ** 2]
-sistema = lti(num, den)
-_, y_clean = step(sistema, T=t)
-
-np.random.seed(42)
-noise = np.random.normal(0, 0.005 * K_real, size=t.shape)
-y_noisy = y_clean + noise
-y_noisy = y_clean + noise + 3 * np.ones_like(y_clean)
-
-# Aplicação da classe
-modelo_sub = SundaresanSubamortecido(t, y_noisy, amplitude_degrau=1, dt=dt)

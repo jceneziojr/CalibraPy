@@ -209,3 +209,5 @@ __marimo__/
 # idea file
 
 .idea/
+deprecated/
+docs/

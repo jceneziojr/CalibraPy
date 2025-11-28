@@ -1,7 +1,5 @@
 # comando resources pyside6-rcc resources.qrc -o resources_rc.py
 #   precisa ir no arquivo Ui e mudar a linha de import para from . import resources_rc
-# tem algum bug, que na segunda execução o ponto é aquisitado todas as vezes. tem que checar oq acontece
-#   mas por enquanto, fechar e abrir pra cada
 
 import os
 import sys
@@ -44,7 +42,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        # self.showMaximized()
+        self.showMaximized()
 
         self.serial = None
 
@@ -264,7 +262,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         if classe_escolhida is not None:
             self.car_din = classe_escolhida(din_x, dados_plot_din, self.amplitude_degrau)
 
-        self.car_din.fig_dyn.show()
+        # self.car_din.fig_dyn.show()
         self.dynamic_report_done = True
 
     def open_help_s(self):
@@ -463,9 +461,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
 
         self.car_est = CaracteristicasEstaticas(self.pontos, self.forward_dict, self.backward_dict,
                                                 self.ajuste_combo.currentIndex() + 1)
-        self.car_est.fig_ccs.show()
-        self.car_est.fig_csens.show()
-        self.car_est.fig_hist.show()
+        # self.car_est.fig_ccs.show()
+        # self.car_est.fig_csens.show()
+        # self.car_est.fig_hist.show()
 
         self.static_report_done = True
 

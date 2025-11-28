@@ -59,17 +59,3 @@ class OrdemZero:
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()
-
-
-K_real = 3.0
-t_final = 5
-dt = 0.01
-t = np.arange(0, t_final, dt)
-u = np.ones_like(t)
-y_clean = K_real * u
-
-np.random.seed(42)
-noise = np.random.normal(0, 0.02 * K_real, size=t.shape)
-y_noisy = y_clean + noise
-
-modelo_0ordem = OrdemZero(t, y_noisy, amplitude_degrau=1, dt=dt)

@@ -12,12 +12,12 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 
-from report_codes.static import CaracteristicasEstaticas, car_est
-from report_codes.id_0_ordem import OrdemZero, modelo_0ordem
-from report_codes.id_1_ordem import PrimeiraOrdem, modelo_1ordem
-from report_codes.id_2_ordem_subam import SundaresanSubamortecido, modelo_sub
-from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido, modelo_sob
-from report_codes.id_2_ordem_critico import SundaresanCriticamenteAmortecido, modelo_crit
+from report_codes.static import CaracteristicasEstaticas
+from report_codes.id_0_ordem import OrdemZero
+from report_codes.id_1_ordem import PrimeiraOrdem
+from report_codes.id_2_ordem_subam import SundaresanSubamortecido
+from report_codes.id_2_ordem_sobream import SundaresanSobreamortecido
+from report_codes.id_2_ordem_critico import SundaresanCriticamenteAmortecido
 
 
 class RelatorioCalibracao:
@@ -287,12 +287,3 @@ class RelatorioCalibracao:
         doc.build(self.story,
                   onFirstPage=self.footer,
                   onLaterPages=self.footer)
-
-# rel = RelatorioCalibracao(pdf_file="relatorio_calibracao.pdf",
-#                           sensor="Termopar XYZ-200",
-#                           responsavel="Júlio César",
-#                           sta=car_est,
-#                           dyn=modelo_crit,
-#                           unidade="cm")
-#
-# rel.build()
