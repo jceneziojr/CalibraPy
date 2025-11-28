@@ -163,7 +163,7 @@ class SundaresanSobreamortecido:
         plt.plot(self.t, self.y, 'r', label='Dados medidos')
         plt.plot(self.t, self.modelo, 'b', label='Modelo ajustado (x K)')
         plt.xlabel("Tempo [s]")
-        plt.ylabel("Amplitude")
+        plt.ylabel("Amplitude da saída do sensor")
         plt.title("Comparação entre dados e modelo (Método de Sundaresan)")
         plt.legend()
         plt.grid(True)

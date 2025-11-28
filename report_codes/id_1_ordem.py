@@ -38,24 +38,32 @@ class PrimeiraOrdem:
         """Identifica o ganho K e a constante de tempo τ."""
         tam = len(self.y)
 
-        # valores inicial e final
+        # condição inicial
         self.y_zerom = float(self.y[0])
-        self.y_inf = float(np.mean(self.y[-int(tam * 0.05):]))
+
+        # remove condição inicial
+        y_adj = self.y - self.y_zerom
+
+        # valor final (normalizado)
+        self.y_inf = float(np.mean(y_adj[-int(tam * 0.05):]))
 
         # ganho DC
-        self.K = float((self.y_inf - self.y_zerom) / self.amplitude_degrau)
+        self.K = float(self.y_inf / self.amplitude_degrau)
 
-        # nível correspondente a 63,2%
-        y_tau = 0.632 * (self.y_inf - self.y_zerom) + self.y_zerom
+        # nível correspondente a 63,2% da variação
+        y_tau = 0.632 * self.y_inf
 
-        # índice mais próximo
-        idx_tau = int(np.abs(self.y - y_tau).argmin())
+        # índice mais próximo em y_adj
+        idx_tau = int(np.abs(y_adj - y_tau).argmin())
 
-        # constante de tempo
+        # constante de tempo τ
         self.tau = float(idx_tau * self.dt)
 
-        # modelo ajustado
-        self.modelo = self.y_zerom + self.K * (1 - np.exp(-self.t / self.tau))
+        # modelo ajustado partindo de zero
+        modelo_zero = self.K * (1 - np.exp(-self.t / self.tau))
+
+        # modelo final com condição inicial recolocada
+        self.modelo = self.y_zerom + modelo_zero
 
     # ============================================================
     def _avaliar_erro(self):
@@ -69,8 +77,9 @@ class PrimeiraOrdem:
         ax.plot(self.t, self.y, 'r', label="Dados")
         ax.plot(self.t, self.modelo, 'b', label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
-        ax.set_ylabel("Amplitude", fontsize=14)
+        ax.set_ylabel("Amplitude da saída do sensor", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)
+        ax.set_ylim(-1, 6)
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()

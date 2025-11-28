@@ -156,8 +156,12 @@ class RelatorioCalibracao:
             return fr"G(s) = \frac{{{p[0]:.4f}}}{{{p[1]:.4f}s + 1}}"
         if ordem == 2:
             K, tau_d, xi, wn = p
-            num = fr"{K:.4f} e^{{-{tau_d:.4f}s}}"
+            sinal = "-" if tau_d >= 0 else "+"
+            tau_abs = abs(tau_d)
+
+            num = fr"{K:.4f} e^{{{sinal}{tau_abs:.4f}s}}"
             den = fr"s^2 + {2 * xi * wn:.4f}s + {wn ** 2:.4f}"
+
             return fr"G(s) = \frac{{{num}}}{{{den}}}"
 
     def add_header(self):

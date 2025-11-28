@@ -33,9 +33,6 @@ class SundaresanSubamortecido:
 
         self.t = t0 + np.arange(N) * self.dt
 
-        np.savetxt("tempo.txt", self.t)
-
-
         # Resultados
         self.K = None
         self.xi = None
@@ -182,8 +179,9 @@ class SundaresanSubamortecido:
         ax.plot(self.t, self.y, 'r', label="Dados")
         ax.plot(self.t, self.modelo, 'b', label="Modelo aproximado")
         ax.set_xlabel("Tempo [s]", fontsize=14)
-        ax.set_ylabel("Amplitude", fontsize=14)
+        ax.set_ylabel("Amplitude da saída do sensor", fontsize=14)
         ax.set_title("Comparação entre dados e modelo dinâmico", fontsize=14)
+        ax.set_ylim(-1, 6)
         ax.grid(True)
         ax.legend()
         self.fig_dyn.tight_layout()

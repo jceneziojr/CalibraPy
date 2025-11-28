@@ -39,7 +39,7 @@ class OrdemZero:
         plt.plot(self.t, self.y, 'r', label='Dados medidos')
         plt.plot(self.t, self.modelo, 'b', label='Modelo ajustado')
         plt.xlabel("Tempo [s]")
-        plt.ylabel("Amplitude")
+        plt.ylabel("Amplitude da saída do sensor")
         plt.title("Comparação entre dados e modelo (0ª Ordem)")
         plt.legend()
         plt.grid(True)

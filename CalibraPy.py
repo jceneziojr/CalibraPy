@@ -12,6 +12,8 @@ import serial.tools.list_ports
 import numpy as np
 from report_codes.static import CaracteristicasEstaticas
 
+from pyqtgraph import mkPen
+
 from report_codes.id_0_ordem import OrdemZero
 from report_codes.id_1_ordem import PrimeiraOrdem
 from report_codes.id_2_ordem_subam import SundaresanSubamortecido
@@ -42,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.showMaximized()
+        # self.showMaximized()
 
         self.serial = None
 
@@ -274,7 +276,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         dialog.exec()
 
     def start_din_test(self):
-        self.din_plot = self.test_plot.plot()
+        self.din_plot = self.test_plot.plot(pen=mkPen(width=2))
         self.dados_plot_din = list()
 
         if self.din_teste:
@@ -332,11 +334,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
             -1
         )
 
-        index_arduino = next(
-            (i for i, desc in enumerate(self.com_ports)
-             if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
-            -1
-        )
+        # index_arduino = next(
+        #     (i for i, desc in enumerate(self.com_ports)
+        #      if "arduino" in desc.lower() or "com10" in desc.lower()),  # TIRAR COM10 NO FINAL
+        #     -1
+        # )
 
         if index_arduino != -1:
             self.device_combo.setCurrentIndex(index_arduino)
@@ -363,7 +365,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_CalibraPy):
         self.start_acquisition()
 
     def start_acquisition(self):
-        p1 = self.signal_plot.plot()
+        p1 = self.signal_plot.plot(pen=mkPen(width=2))
 
         self.get_signal = GetSignal(self.serial)
         self.get_signal.data_ready.connect(lambda data: p1.setData(data))
